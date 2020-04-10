@@ -7,7 +7,7 @@ import cv2
 drive_data = DataControl()
 drive_data.start()
 # drive_data.set("tfl", "red")
-# objd = OBJDetection(drive_data)
+objd = OBJDetection(drive_data)
 laned = LANEDetection(drive_data)
 
 cap = CVCapIN(id_c=0)
@@ -20,9 +20,8 @@ while cv2.waitKey(1) != ord("q"):
     cv2.imshow("ddd", frame)
     laned_img = laned.run(frame)
     cv2.imshow("laned", laned_img)
-    # laned.write_data()
-    # objd.run(frame)
-    # objd.write_data()
+    objd_img = objd.run(frame)
+    cv2.imshow("laned", objd_img)
 
     print(str(drive_data))
 
