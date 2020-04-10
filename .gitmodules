@@ -1,0 +1,3 @@
+[submodule "obj_detectors"]
+	path = obj_detectors
+	url = https://github.com/vas59/obj_detectors.git
