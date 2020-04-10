@@ -59,8 +59,8 @@ class LANEDetection:
     def run(self, frame: np.array):
         frame = frame.copy()
         img_size = self.img_size
-        if frame is None:
-            return None
+        # if frame is None:
+        #     return None
         # frame.
         frame = cv2.resize(frame, (self.img_size[1], self.img_size[0]))
         warped = self.warp(frame)
