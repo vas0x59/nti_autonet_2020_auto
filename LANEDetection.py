@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-
+import Data
 # import
 
 
@@ -9,7 +9,7 @@ class LANEDetection:
     def __init__(self, drive_data: Data.DataControl, img_size=[200, 360]):
         self.drive_data = drive_data
         self.img_size = img_size
-        self.points = []
+        # self.points = []
 
         self.clip_value = 100
         self.nwindows = 8
@@ -58,10 +58,41 @@ class LANEDetection:
 
     def run(self, frame: np.array):
         frame = frame.copy()
+        img_size = self.img_size
+        if frame is None:
+            return None
         # frame.
-        frame = self.warp(frame)
-        frame = self.thresh(frame)
+        frame = cv2.resize(frame, (self.img_size[1], self.img_size[0]))
+        warped = self.warp(frame)
+        frame = self.thresh(warped.copy())
         points, out_img = self.detect(frame)
+        p_s = len(points)
+        err = 0
+        err2 = 0
+        if (p_s > 0):
+            qq = p_s//8*4
+            cv2.circle(out_img,(int(points[qq-1][0]),int(points[qq-1][1])),2,(0,80,255),1)
+            cv2.circle(out_img,(int(points[p_s-1][0]),int(points[p_s-1][1])),2,(0,80,255),1)
+            err2 = self.img_size[1]//2-(points[p_s-1][0]+points[qq-1][0])/2+10
+            err = points[p_s-1][0]-points[qq-1][0]
+        # if show==True:
+        #     cv2.imshow("CenterLine",out_img)
+        # crop = warped[warped.shape[0]-200:warped.shape[0], warped.shape[1]//10*5-50:warped.shape[1]//10*5+50].copy()
+        # su = np.sum(crop[:, :])
+        # print("su", su)
+        su2 = 0
+        ccc = img_size[1]//2
+        if (p_s > 0):
+            ccc = (points[p_s-1][0]+points[qq-1][0])//2
+        ccc = img_size[1]//2
+        yyyyy= 70
+        
+        crop2 = warped[yyyyy:yyyyy+80, int(ccc-40):int(ccc+40)]
+        cv2.circle(out_img,(int(ccc),int((yyyyy + yyyyy+ 70)/2)),2,(0,255,255),3)
+        su2 = np.sum(crop2[:, :])
+        # yyyyy= 0
+        self.drive_data.set("e1", err)
+        self.drive_data.set("e2", err2)
         return out_img
 
     def warp(self, img):
@@ -71,6 +102,7 @@ class LANEDetection:
         return warped
 
     def thresh(self, img):
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img[(img < self.clip_value)] = self.clip_value
         # cv2.clip
         img_blur = cv2.medianBlur(img, 5)
