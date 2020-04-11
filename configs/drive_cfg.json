@@ -1,0 +1,14 @@
+{
+    "PID": {
+        "p":0,
+        "i":0,
+        "d":0
+    },
+    "scripts"{
+        "stop_sign": {
+            "enable":true,
+            "stop_time":5,
+            "attention_delay":1
+        }
+    }
+}
