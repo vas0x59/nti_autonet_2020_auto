@@ -6,8 +6,10 @@ import time
 # from DataDefault import default
 # from DataDefault import gen_default
 # FLOAT_PRINT_RES
+
 class DataField:
-    def __init__(self, time=0, data=""):
+    def __init__(self, time=0, data="", name=""):
+        self.name = name
         self.time = time
         self.data = data
         self.default = True
@@ -27,7 +29,7 @@ class DataField:
 def gen_default(din):
     d = dict(din)
     for i in d.keys():
-        d[i] = DataField(time=0, data=d[i])
+        d[i] = DataField(time=0, data=d[i], name=i)
     return d
 
 class DataControl:
@@ -47,12 +49,12 @@ class DataControl:
             return t_now
         else:
             return -1
-    def get(self, field_name):
+    def get(self, field_name) -> DataField :
         if  field_name in self.data.keys():
             d = self.data[field_name]
-            return  d.time, d.data, d.default
+            return  d
         else:
-            return -1, None
+            return DataField()
     def __str__(self):
         # return str(self.data)
         out = ""
