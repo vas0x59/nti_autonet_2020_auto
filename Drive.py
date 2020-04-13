@@ -16,23 +16,18 @@ class Drive:
         self.drive_data.set("std_speed", self.config.std_speed)
         self.pid = PID.PID(kP=self.config.PID.p, kI=self.config.PID.i, kD=self.config.PID.d)
         self.stop_script = StopSign(self.config.scripts["stop_sign"], self.drive_data)
-
+        self.pedestrian_script = Pedestrain
     def run(self):
         e1_d = self.drive_data.get(Utils.E1)
         e2_d = self.drive_data.get(Utils.E2)
         
         if self.config.scripts["stop_sign"].enable == True:
             self.stop_script.run()
-        if self.config.scripts["pedistrain_sign"].enable == True:
-            self.pedistrain_script()
+        if self.config.scripts["pedestrian_sign"].enable == True:
+            self.pedistrain_script.run()
         
         pid_r = self.pid.calc(e1_d.data*self.config.e1_K + e2_d.data*self.config.e2_K)
-    
-    def pedistrain_script(self):
-        signs_d = self.drive_data.get(Utils.SIGNS_LIST)
-        pedistrain_sign = "pedistrain" in signs_d
-        # if pedistrain_sign:
-            
-        # pass 
+        self.drive_data.set("servo", pid_r+self.config.std_servo)
+
 
 

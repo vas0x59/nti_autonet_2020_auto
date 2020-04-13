@@ -7,13 +7,14 @@
     "e1_K":0,
     "e2_K":0,
     "std_speed":0,
+    "std_servo":0,
     "scripts":{
         "stop_sign": {
             "enable":true,
             "stop_time":5,
             "attention_delay":1
         },
-        "pedistrain_sign": {
+        "pedestrian_sign": {
             "enable":true,
             "slow_time":5,
             "slow_speed":0,
