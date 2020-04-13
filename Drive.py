@@ -8,7 +8,7 @@ import PID
 import json
 
 from DriveScripts.StopSign import StopSign
-
+from DriveScripts.PedestrianSign import PedestrianSign
 class Drive:
     def __init__(self, drive_data: Data.DataControl):
         self.drive_data = drive_data
@@ -16,7 +16,8 @@ class Drive:
         self.drive_data.set("std_speed", self.config.std_speed)
         self.pid = PID.PID(kP=self.config.PID.p, kI=self.config.PID.i, kD=self.config.PID.d)
         self.stop_script = StopSign(self.config.scripts["stop_sign"], self.drive_data)
-        self.pedestrian_script = Pedestrain
+        self.pedestrian_script = PedestrianSign(self.config.scripts["pedestrian_sign"], self.drive_data)
+        print("DRIVE", self.config)
     def run(self):
         e1_d = self.drive_data.get(Utils.E1)
         e2_d = self.drive_data.get(Utils.E2)
