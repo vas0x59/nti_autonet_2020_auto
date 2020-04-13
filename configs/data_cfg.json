@@ -6,6 +6,9 @@
         "e2":0,
         "tfl":"none",
         "signs":[],
-        "crl":false
+        "crl":false,
+        "speed":0,
+        "servo":0,
+        "std_speed":0
     }
 }
