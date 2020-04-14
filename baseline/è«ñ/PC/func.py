@@ -136,17 +136,17 @@ def centre_mass(perspective, d=0):
 
 
 class Vision:
-    def __init__(self):
+    def __init__(self, d = 0):
+        self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
     def vision_func(self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
-        binary = binarize(img, d=1)
+        binary = binarize(img, d=self.d)
         perspective = trans_perspective(binary, TRAP, RECT, SIZE)
         # Detect_Stop_Line = detect_stop(perspective)
         return perspective
-
 
     def angele(self, frame):
         image = frame.copy()
