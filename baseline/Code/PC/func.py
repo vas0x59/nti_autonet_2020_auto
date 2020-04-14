@@ -148,7 +148,7 @@ def centre_mass(perspective, d=0):
 def wait_time(time_wait: int):
     last_time = time.time()
     now_time = time.time()
-    print(last_time)
+#     print(last_time)
     while now_time - last_time < time_wait:
         now_time = time.time()
 
