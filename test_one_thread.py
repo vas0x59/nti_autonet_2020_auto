@@ -12,10 +12,10 @@ objd = OBJDetection(drive_data)
 objd.load()
 laned = LANEDetection(drive_data)
 
-cap = CVCapIN(id_c=0)
+cap = CVCapIN(id_c="./Sign4.mkv")
 cap.start()
 
-drive = Drive()
+drive = Drive(drive_data=drive_data)
 
 fpser = FPS()
 fpser.start()

@@ -12,7 +12,9 @@ class PedestrianSign:
         self.drive_data.set("speed", self.drive_data.get("std_speed").data)
 
         @Utils.delay(delay=self.config.attention_delay)
-        self.enb()
+        def go():
+            self.enb()
+        go()
     def run(self):
         signs_d = self.drive_data.get(Utils.SIGNS_LIST)
         stop_sign = "stop" in signs_d or "stop_sign" in signs_d
@@ -21,4 +23,6 @@ class PedestrianSign:
             self.drive_data.set("speed", self.config.slow_speed)
 
             @Utils.delay(delay=self.config.slow_time)
-            self.go()
+            def go():
+                self.go()
+            go()
