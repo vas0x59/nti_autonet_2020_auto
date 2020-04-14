@@ -181,7 +181,7 @@ class Vision:
             angle = 104
         return angle
       
-class PID:
+class PD:
     def __init__(self, kP, kD):
         self.kP = kP
         self.kD = kD
