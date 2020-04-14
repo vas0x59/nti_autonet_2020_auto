@@ -32,7 +32,7 @@ class OBJDetection:
         self.detector = YoloOpencvDetector(self.model_c_path, self.model_w_path, CLASSESPath=self.model_n_path)
         self.detector_std = YoloOpencvDetector("obj_detectors/Detectors/YOLO/yolov3_tiny.cfg", "obj_detectors/Detectors/YOLO/yolov3_tiny.weights", CLASSESPath="obj_detectors/coco.names")
 
-    def run(self, frame):
+    def run(self, frame, thresh=6):
         frame = frame[:, frame.shape[1] // 2:]
         boxes, classIDs, confidences = self.detector.detect(frame, s=(self.model_res, self.model_res))
         img_out = Utils.draw_boxes(frame, boxes, classIDs, confidences, self.detector.CLASSES, COLORS=self.detector.COLORS)
@@ -45,7 +45,7 @@ class OBJDetection:
         img_out = Utils.draw_boxes(img_out, boxes, classIDs, confidences, self.detector_std.CLASSES, COLORS=self.detector_std.COLORS)
         for i in signs:
             self.filter_dict[i] += 1
-        if self.frames_left == 6:
+        if self.frames_left == thresh:
             self.frames_left = 0
             self.filter_dict = dict().fromkeys(self.sings_filter, 0)
         else:

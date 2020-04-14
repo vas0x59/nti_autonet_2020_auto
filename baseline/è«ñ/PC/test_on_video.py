@@ -7,7 +7,8 @@ if cap.isOpened() == False:
     exit()
 
 # vision = VisionStopSign()
-vision = Vision()
+# vision = Vision()
+vision = VisionSignHist()
 b = 0
 i = 0
 while (cv.waitKey(1) != 27):
