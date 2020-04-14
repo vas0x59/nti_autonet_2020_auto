@@ -6,7 +6,7 @@ if cap.isOpened() == False:
     print("Cannot open input video")
     exit()
 
-vision = Vision()
+vision = VisionStopSign()
 b = 0
 i = 0
 while (cv.waitKey(1) != 27):

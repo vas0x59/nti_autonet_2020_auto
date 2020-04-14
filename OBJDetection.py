@@ -15,7 +15,7 @@ class OBJDetection:
         self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         self.model_n_path = "yolo_sign_model_v1/signs.names"
         self.model_res = 320
-        self.sings_filter = ["pedestrian", "stop", "parking", "a_unevenness", "road_works", "way_out", "no_drive"]
+        self.sings_filter = ["pedestrian", "stop", "parking", "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]
         self.filter_dict = dict().fromkeys(self.sings_filter, 0)
         self.frames_left = 0
         """
