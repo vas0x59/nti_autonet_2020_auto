@@ -147,6 +147,7 @@ def centre_mass(perspective, d=0):
 class Vision:
     def __init__(self):
         self.last = 0
+        self.angle_pd = PD(kP=KP, kD=KD)
     def vision_func(self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
@@ -158,9 +159,8 @@ class Vision:
 
     def angele(self, frame):
         image = frame.copy()
-        angle_pd = PD(kP=KP, kD=KD)
         left, right = centre_mass(image, d=1)
-        angle = angle_pd(left=left, right=right)
+        angle = self.angle_pd.calc(left=left, right=right)
         if angle < 70:
             angle = 70
         elif angle > 106:
