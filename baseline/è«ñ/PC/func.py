@@ -120,3 +120,27 @@ def centre_mass(perspective, d=0):
         cv2.imshow('CentrMass', perspective)
 
     return mid_mass_left, mid_mass_right
+
+class Vision:
+    def __init__():
+        self.last = 0
+
+    def vision_func(frame):
+        img = cv2.resize(frame, (400, 300))
+        binary = binarize(img, d=1)
+        perspective = trans_perspective(binary, TRAP, RECT, SIZE)
+        Detect_Stop_Line = detect_stop(perspective)
+        left, right = centre_mass(perspective, d=1)
+        
+        err = 0 - ((left + right) // 2 - 200)
+
+        if abs(right - left) < 100:
+            err = last
+            print("LAST")
+
+        angle = int(87 + KP * err + KD * (err - last))
+        if angle < 70:
+            angle = 70
+        elif angle > 106:
+            angle = 104
+        return angle
