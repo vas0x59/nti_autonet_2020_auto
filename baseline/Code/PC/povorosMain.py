@@ -113,24 +113,33 @@ cv2.namedWindow("Frame")
 send_cmd(DEFAULT_CMD)
 
 vision = Vision()
-
+go = ['f', 'l', 'r', 'r', 'f', 'l']
+nGo = 6
+kGo = 0
 while cv2.waitKey(10) != ESCAPE:
     status, frame = client.get_frame(0.25)  # read the sent frame
     if status == beholder.Status.OK:
         cv2.imshow("Frame", frame)
-        # frame_copy = frame.copy()
-        # perspective = vision.vision_func(frame=frame_copy)
-        # angle = vision.angele(frame=perspective)
-        # stop_line = vision.detect_stop_line(frame=perspective)
-        ang, spd = vision.run(frame.copy())
-#         stop_line = detect_stop(perspective)
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        angle = vision.angele(frame=perspective)
+        stop_line = vision.detect_stop_line(frame=perspective)
 
-        # if not stop_line:
-        send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
-        # else:
-        #     send_cmd('H00/' + '1450' + '/' + str(ang) + "E")
-        #     time.sleep(0.5)
-        #     send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
+        if not stop_line:
+            send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
+        else:
+            send_cmd('H00/' + '1450' + '/' + str(ang) + "E")
+            time.sleep(0.5)
+            send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
+            if go[kGo] == 'f':
+                forward()
+            elif go[kGo] == 'r':
+                povorotRight()
+            elif go[kGo] == 'l':
+                pororotLeft()
+            kGo += 1
+            if kGo >= nGo:
+                kGo = 0
             
 
         key = cv2.waitKey(1)
