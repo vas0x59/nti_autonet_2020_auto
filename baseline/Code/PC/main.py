@@ -16,6 +16,70 @@ def send_cmd(cmd):
 
 DEFAULT_CMD = 'H11/1500/90E'
 
+def povorotRight():
+    # control(pi, ESC, 1550, STEER, 90) - # На право по времени
+    # time.sleep(0.6)
+    # control(pi, ESC, 1550, STEER, 90 - 25)
+    # time.sleep(1)
+
+    angle_pd = PD(kP=KP, kD=KD)
+    ret, frame = cap.read()
+    frame_copy = frame.copy()
+    perspective = vision.vision_func(frame=frame_copy)
+    angle = vision.angele(frame=perspective.copy())
+    left, right = centre_mass(perspective.copy())
+    send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
+    while left < 150:
+        ret, frame = cap.read()
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        angle = vision.angele(frame=perspective.copy())
+        left, right = centre_mass(perspective.copy())
+    while left >= 150:
+        ret, frame = cap.read()
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        left, right = centre_mass(perspective.copy())
+        angle = angle_pd.calc(left=115, right=right)
+        if angle < 70:
+            angle = 70
+        elif angle > 106:
+            angle = 104
+        send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
+
+ def forward():
+    ret, frame = cap.read()       #  Ехать прямо, Пока не видит линию с лева
+    frame_copy = frame.copy()
+    perspective = vision.vision_func(frame=frame_copy)
+    left, right = centre_mass(perspective.copy())
+    while left < 150:
+        ret, frame = cap.read()
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        left, right = centre_mass(perspective.copy())
+        send_cmd('H00/' + str(speed) + '/' + str(90) + "E")
+    while left >= 150:
+        ret, frame = cap.read()
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        left, right = centre_mass(perspective.copy())
+        send_cmd('H00/' + str(speed) + '/' + str(90) + "E")
+
+    # send_cmd('H00/' + str(speed) + '/' + str(90) + "E")
+    # wait_time(time_wait=3)#Едет 3 секунды
+
+    # encoders = 0    #В этой перемене будет находиться энкодеры самой машинки
+    # encoders_forward = 200
+    # while encoders <= encoders_forward:
+    #     # send_cmd('H00/' + str(speed) + '/' + str(90) + "E")
+
+
+ def pororotLeft():
+    end_cmd('H00/' + str(speed) + '/' + str(90) + "E") # на лево по времени
+    time.sleep(0.9)
+    end_cmd('H00/' + str(speed) + '/' + str(90+25) + "E")
+    time.sleep(0.9)
+
 # Connection with raspberry to transmit commands
 sock = socket.socket()
 server_address = (IPadress, 1080)
