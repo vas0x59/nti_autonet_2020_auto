@@ -61,12 +61,12 @@ while cv2.waitKey(10) != ESCAPE:
         ang, spd = vision.run(frame.copy())
 #         stop_line = detect_stop(perspective)
 
-        if not stop_line:
-            send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
-        else:
-            send_cmd('H00/' + '1450' + '/' + str(ang) + "E")
-            time.sleep(0.5)
-            send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
+        # if not stop_line:
+        send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
+        # else:
+        #     send_cmd('H00/' + '1450' + '/' + str(ang) + "E")
+        #     time.sleep(0.5)
+        #     send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
             
 
         key = cv2.waitKey(1)
