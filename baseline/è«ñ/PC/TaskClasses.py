@@ -87,6 +87,7 @@ class VisionStopSign:
     @delay(delay=0.5)
     def stopeer_f(self):
         self.speed = stop_speed
+        time.sleep(0.1)
         self.exit = True
         # exit()
     def run(self, frame):
