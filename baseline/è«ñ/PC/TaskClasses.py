@@ -33,6 +33,7 @@ class Vision:
     def stopeer_f(self):
         self.speed = stop_speed
         # exit()
+        time.sleep(0.1)
         self.exit = True
     def run(self, frame):
         perspective = self.vision_func(frame=frame)
