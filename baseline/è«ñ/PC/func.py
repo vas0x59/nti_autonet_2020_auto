@@ -41,10 +41,10 @@ speed = 1548
 stop_speed = 1500
 
 
-def detect_stop(perspective):
-    if (perspective[150][180] > 200) and (perspective[150][200] > 200) and (perspective[150][160] > 200):
-        return True
-    return False
+# def detect_stop(perspective):
+#     if (perspective[150][180] > 200) and (perspective[150][200] > 200) and (perspective[150][160] > 200):
+#         return True
+#     return False
 
 
 def binarize(img, d=0):
@@ -136,19 +136,25 @@ def centre_mass(perspective, d=0):
 
 
 class Vision:
-    def __init__(self, d = 0):
+    def __init__(self, d=0):
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
-    def vision_func(self, frame):
+    
+    def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
         binary = binarize(img, d=self.d)
         perspective = trans_perspective(binary, TRAP, RECT, SIZE)
-        # Detect_Stop_Line = detect_stop(perspective)
         return perspective
 
-    def angele(self, frame):
+    def detect_stop_line(self, frame):
+        if (frame[100][180] > 200) and (frame[100][200] > 200) and (frame[100][160] > 200):
+            return True
+        else:
+            return False
+
+    def angele (self, frame):
         image = frame.copy()
         left, right = centre_mass(image, d=self.d)
         angle = self.angle_pd.calc(left=left, right=right)
