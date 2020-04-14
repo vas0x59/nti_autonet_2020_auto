@@ -93,7 +93,9 @@ while cv2.waitKey(10) != ESCAPE:
         img = cv2.resize(frame, (400, 300))
         binary = binarize(img, d=1)
         perspective = trans_perspective(binary, TRAP, RECT, SIZE)
+        Detect_Stop_Line = detect_stop(perspective)
         left, right = centre_mass(perspective, d=1)
+        
         err = 0 - ((left + right) // 2 - 200)
 
         if abs(right - left) < 100:
@@ -107,7 +109,7 @@ while cv2.waitKey(10) != ESCAPE:
             angle = 104
 
         last = err
-
+        
         # send speed and angle to Eyecar
         send_cmd('H00/' + str(speed) + '/' + str(angle)+"E")
 
