@@ -150,7 +150,7 @@ class Vision:
 
     def angele(self, frame):
         image = frame.copy()
-        left, right = centre_mass(image, d=1)
+        left, right = centre_mass(image, d=self.d)
         angle = self.angle_pd.calc(left=left, right=right)
         if angle < 70:
             angle = 70
