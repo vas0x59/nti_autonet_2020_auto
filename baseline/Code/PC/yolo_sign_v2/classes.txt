@@ -1,0 +1,11 @@
+pedestrian
+no_drive
+a_unevenness
+no_entery
+road_works
+stop
+way_out
+parking
+none
+traffic_light
+person
