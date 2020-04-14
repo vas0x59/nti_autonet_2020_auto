@@ -2,6 +2,42 @@ import cv2
 import numpy as np
 import time
 timeout_detect_stop = 0
+KP = 0.32  #0.22
+KD = 0.17
+last = 0
+SIZE = (400, 300)
+
+RECT = np.float32([[0, 299],
+                   [399, 299],
+                   [399, 0],
+                   [0, 0]])
+
+TRAP = np.float32([[0, 299],
+                   [399, 299],
+                   [320, 200],
+                   [80, 200]])
+
+timeout = 0
+l = 1
+r = 0
+
+povor = 0
+totl = 1
+pid = 0
+
+ESCAPE = 27
+SPASE = 32
+
+i=1
+j = 0
+
+IPadress = "192.168.1.104"
+
+flag = 1
+key = 1
+fn = 1
+speed = 1548
+
 
 KP = 0.32  #0.22
 KD = 0.17
