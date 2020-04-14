@@ -15,7 +15,7 @@ while (cv.waitKey(1) != 27):
     perspective = vision.vision_func(frame=frame_copy)
     cv.imshow("perspective", perspective)
     print(vision.angele(frame=perspective))
-    stop = detect_stop(perspective)
+    stop = vision.detect_stop_line(frame=perspective)
     if stop:
         print(stop)
         b = perspective.copy()
