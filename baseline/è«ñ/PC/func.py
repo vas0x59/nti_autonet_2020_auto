@@ -3,6 +3,22 @@ import numpy as np
 import time
 timeout_detect_stop = 0
 
+KP = 0.32  #0.22
+KD = 0.17
+last = 0
+
+SIZE = (400, 300)
+
+RECT = np.float32([[0, 299],
+                   [399, 299],
+                   [399, 0],
+                   [0, 0]])
+
+TRAP = np.float32([[0, 299],
+                   [399, 299],
+                   [320, 200],
+                   [80, 200]])
+
 def detect_stop(perspective):
     global timeout_detect_stop
     if int(time.time()) > timeout_detect_stop + 2:
