@@ -1,6 +1,22 @@
 import cv2
 import numpy as np
+import time
+timeout_detect_stop = 0
 
+def detect_stop(perspective):
+    global timeout_detect_stop
+    if int(time.time()) > timeout_detect_stop + 2:
+        stoplin = 0
+        for _L_ in range(50):
+            stoplin += int(np.sum(perspective[i, :], axis=0) // 255)
+
+        if stoplin > 7000:
+            timeout_detect_stop = int(time.time())
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def binarize(img, d=0):
     hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
