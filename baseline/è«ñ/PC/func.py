@@ -153,6 +153,7 @@ class Vision:
         binary = binarize(img, d=1)
         perspective = trans_perspective(binary, TRAP, RECT, SIZE)
         # Detect_Stop_Line = detect_stop(perspective)
+        return perspective
 
 
     def angele(self, frame):
