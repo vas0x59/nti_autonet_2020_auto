@@ -180,3 +180,15 @@ class Vision:
         elif angle > 106:
             angle = 104
         return angle
+      
+class PD:
+    def __init__(self, kP, kD):
+        self.kP = kP
+        self.kD = kD
+        self.prev_error = 0
+        self.res = 0
+
+    def calc(self, err):
+        self.res = self.kP * err + self.kD * ((err - self.prev_error))
+        self.prev_error = err
+        return self.res
