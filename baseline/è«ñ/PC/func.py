@@ -38,6 +38,7 @@ flag = 1
 key = 1
 fn = 1
 speed = 1548
+stop_speed = 1500
 
 
 def detect_stop(perspective):
