@@ -39,7 +39,17 @@ key = 1
 fn = 1
 speed = 1548
 stop_speed = 1500
-
+def delay(delay=0.):
+    """
+    Decorator delaying the execution of a function for a while.
+    """
+    def wrap(f):
+        @wraps(f)
+        def delayed(*args, **kwargs):
+            timer = threading.Timer(delay, f, args=args, kwargs=kwargs)
+            timer.start()
+        return delayed
+    return wrap
 
 # def detect_stop(perspective):
 #     if (perspective[150][180] > 200) and (perspective[150][200] > 200) and (perspective[150][160] > 200):
@@ -140,6 +150,7 @@ class Vision:
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
+        self.speed = speed
     
     def vision_func (self, frame):
         image = frame.copy()
@@ -163,8 +174,22 @@ class Vision:
         elif angle > 106:
             angle = 104
         return angle
-
-
+    @delay(delay=0.5)
+    def stopeer_f(self):
+        self.speed = stop_speed
+    def run(self, frame):
+        perspective = self.vision_func(frame=frame_copy)
+        self.angle = self.angele(frame=perspective)
+        stop_line = self.detect_stop_line(frame=perspective)
+        if stop_line:
+            self.speed = 1450
+            self.stopeer_f()
+            # send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
+        # else:
+            # send_cmd('H00/' + '1450' + '/' + str(angle) + "E")
+            # time.sleep(0.5)
+            # send_cmd('H00/' + str(stop_speed) + '/' + str(angle) + "E")
+        return self.angele, self.speed
 class PD:
     def __init__(self, kP, kD):
         self.kP = kP
