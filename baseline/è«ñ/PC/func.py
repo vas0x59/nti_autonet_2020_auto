@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 import time
-
+import threading
+from functools import wraps
 timeout_detect_stop = 0
 KP = 0.32  # 0.22
 KD = 0.17
@@ -145,51 +146,7 @@ def centre_mass(perspective, d=0):
     return mid_mass_left, mid_mass_right
 
 
-class Vision:
-    def __init__(self, d=0):
-        self.d = d
-        self.last = 0
-        self.angle_pd = PD(kP=KP, kD=KD)
-        self.speed = speed
-    
-    def vision_func (self, frame):
-        image = frame.copy()
-        img = cv2.resize(image, (400, 300))
-        binary = binarize(img, d=self.d)
-        perspective = trans_perspective(binary, TRAP, RECT, SIZE)
-        return perspective
 
-    def detect_stop_line(self, frame):
-        if (frame[100][180] > 200) and (frame[100][200] > 200) and (frame[100][160] > 200):
-            return True
-        else:
-            return False
-
-    def angele (self, frame):
-        image = frame.copy()
-        left, right = centre_mass(image, d=self.d)
-        angle = self.angle_pd.calc(left=left, right=right)
-        if angle < 70:
-            angle = 70
-        elif angle > 106:
-            angle = 104
-        return angle
-    @delay(delay=0.5)
-    def stopeer_f(self):
-        self.speed = stop_speed
-    def run(self, frame):
-        perspective = self.vision_func(frame=frame_copy)
-        self.angle = self.angele(frame=perspective)
-        stop_line = self.detect_stop_line(frame=perspective)
-        if stop_line:
-            self.speed = 1450
-            self.stopeer_f()
-            # send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
-        # else:
-            # send_cmd('H00/' + '1450' + '/' + str(angle) + "E")
-            # time.sleep(0.5)
-            # send_cmd('H00/' + str(stop_speed) + '/' + str(angle) + "E")
-        return self.angele, self.speed
 class PD:
     def __init__(self, kP, kD):
         self.kP = kP

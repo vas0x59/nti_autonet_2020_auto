@@ -7,7 +7,7 @@ import socket
 import time
 
 from func import *
-
+from TaskClasses import *
 
 def send_cmd(cmd):
     message = cmd.encode()
