@@ -57,8 +57,8 @@ while cv2.waitKey(10) != ESCAPE:
         frame_copy = frame.copy()
         perspective = vision.vision_func(frame=frame_copy)
         angle = vision.angele(frame=perspective)
-
-        stop_line = detect_stop(perspective)
+        stop_line = vision.detect_stop_line(frame=perspective)
+#         stop_line = detect_stop(perspective)
 
         if not stop_line:
             send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
