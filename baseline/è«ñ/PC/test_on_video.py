@@ -6,7 +6,8 @@ if cap.isOpened() == False:
     print("Cannot open input video")
     exit()
 
-vision = VisionStopSign()
+# vision = VisionStopSign()
+vision = Vision()
 b = 0
 i = 0
 while (cv.waitKey(1) != 27):
@@ -23,6 +24,8 @@ while (cv.waitKey(1) != 27):
     #     i += 1
     ang, spd = vision.run(frame.copy())
     print(ang, spd)
+    if vision.exit == True:
+        break
 
 cv.destroyAllWindows()
 cap.release()
