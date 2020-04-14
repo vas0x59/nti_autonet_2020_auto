@@ -8,44 +8,13 @@ import time
 
 from func import *
 
+
 def send_cmd(cmd):
-        message = cmd.encode()
-        sock.sendall(message)
+    message = cmd.encode()
+    sock.sendall(message)
 
 
 DEFAULT_CMD = 'H11/1500/90E'
-
-# KP = 0.32  #0.22
-# KD = 0.17
-# last = 0
-
-# SIZE = (400, 300)
-
-# RECT = np.float32([[0, 299],
-#                    [399, 299],
-#                    [399, 0],
-#                    [0, 0]])
-
-# TRAP = np.float32([[0, 299],
-#                    [399, 299],
-#                    [320, 200],
-#                    [80, 200]])
-
-# timeout = 0
-# l = 1
-# r = 0
-
-# povor = 0
-# totl = 1
-# pid = 0
-
-# ESCAPE = 27
-# SPASE = 32
-
-# i=1
-# j = 0
-
-# IPadress = "192.168.1.104"
 
 # Connection with raspberry to transmit commands
 sock = socket.socket()
@@ -69,7 +38,7 @@ client = beholder.Client(zmq_host=IPadress,
                          # width=640,
                          # height=480,
                          framerate=30,
-                         encoding=beholder.Encoding.MJPEG,  #MJPEG,    #H264
+                         encoding=beholder.Encoding.MJPEG,  # MJPEG,    #H264
                          limit=20)
 
 client.start()
@@ -78,40 +47,26 @@ client.start()
 cv2.namedWindow("Frame")
 
 send_cmd(DEFAULT_CMD)
-# time.sleep(2)
-# flag = 1
-# key = 1
-# fn = 1
-# speed = 1548
+
+vision = Vision()
 
 while cv2.waitKey(10) != ESCAPE:
     status, frame = client.get_frame(0.25)  # read the sent frame
     if status == beholder.Status.OK:
         cv2.imshow("Frame", frame)
+        frame_copy = frame.copy()
+        perspective = vision.vision_func(frame=frame_copy)
+        angle = vision.angele(frame=perspective)
 
-        # detection road
-        img = cv2.resize(frame, (400, 300))
-        binary = binarize(img, d=1)
-        perspective = trans_perspective(binary, TRAP, RECT, SIZE)
-        Detect_Stop_Line = detect_stop(perspective)
-        left, right = centre_mass(perspective, d=1)
-        
-        err = 0 - ((left + right) // 2 - 200)
+        stop_line = detect_stop(perspective)
 
-        if abs(right - left) < 100:
-            err = last
-            print("LAST")
-
-        angle = int(87 + KP * err + KD * (err - last))
-        if angle < 70:
-            angle = 70
-        elif angle > 106:
-            angle = 104
-
-        last = err
-        
-        # send speed and angle to Eyecar
-        send_cmd('H00/' + str(speed) + '/' + str(angle)+"E")
+        if not stop_line:
+            send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
+        else:
+            send_cmd('H00/' + '1450' + '/' + str(angle) + "E")
+            time.sleep(0.5)
+            send_cmd('H00/' + str(stop_speed) + '/' + str(angle) + "E")
+            
 
         key = cv2.waitKey(1)
 
