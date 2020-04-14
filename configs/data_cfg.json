@@ -9,6 +9,8 @@
         "crl":false,
         "speed":0,
         "servo":0,
-        "std_speed":0
+        "std_speed":0,
+        "opt_x":0,
+        "opt_y":0
     }
 }
