@@ -189,6 +189,6 @@ class PD:
         self.res = 0
 
     def calc(self, err):
-        self.res = self.kP * err + self.kD * ((err - self.prev_error))
+        self.res = self.kP * err + self.kD * (err - self.prev_error)
         self.prev_error = err
         return self.res
