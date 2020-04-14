@@ -47,7 +47,7 @@ def povorotRight():
             angle = 104
         send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
 
- def forward():
+def forward():
     ret, frame = cap.read()       #  Ехать прямо, Пока не видит линию с лева
     frame_copy = frame.copy()
     perspective = vision.vision_func(frame=frame_copy)
@@ -74,7 +74,7 @@ def povorotRight():
     #     # send_cmd('H00/' + str(speed) + '/' + str(90) + "E")
 
 
- def pororotLeft():
+def pororotLeft():
     end_cmd('H00/' + str(speed) + '/' + str(90) + "E") # на лево по времени
     time.sleep(0.9)
     end_cmd('H00/' + str(speed) + '/' + str(90+25) + "E")
