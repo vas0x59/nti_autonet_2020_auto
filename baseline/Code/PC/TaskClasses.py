@@ -109,7 +109,7 @@ class VisionStopSign:
             # send_cmd('H00/' + str(stop_speed) + '/' + str(angle) + "E")
         # if slen(elf.sign_hist
         if self.sign == "stop":
-            self.speed = 1450
+            self.speed = 1525
             self.stopeer_f()
             # exit()
         # if self.sign != "none" and self.sign_hist[-1]:
@@ -158,7 +158,7 @@ class VisionSignHist:
         self.exit = True
         # exit()
     def run(self, frame):
-        img_out, ssnow, self.sign = self.objd.run(frame.copy(), thresh=16)
+        img_out, ssnow, self.sign = self.objd.run(frame.copy(), thresh=15, conf=0.5)
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)

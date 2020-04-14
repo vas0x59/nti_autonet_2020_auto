@@ -18,6 +18,7 @@ class OBJDetection:
         self.sings_filter = ["pedestrian", "stop", "parking", "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]
         self.filter_dict = dict().fromkeys(self.sings_filter, 0)
         self.frames_left = 0
+        self.hist = []
         """
         pedestrian
         no_drive
@@ -32,26 +33,32 @@ class OBJDetection:
         self.detector = YoloOpencvDetector(self.model_c_path, self.model_w_path, CLASSESPath=self.model_n_path)
         self.detector_std = YoloOpencvDetector("obj_detectors/Detectors/YOLO/yolov3_tiny.cfg", "obj_detectors/Detectors/YOLO/yolov3_tiny.weights", CLASSESPath="obj_detectors/coco.names")
 
-    def run(self, frame, thresh=6):
+    def run(self, frame, thresh=6, conf=0.5):
         frame = frame[:, frame.shape[1] // 2:]
-        boxes, classIDs, confidences = self.detector.detect(frame, s=(self.model_res, self.model_res))
+        boxes, classIDs, confidences = self.detector.detect(frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(frame, boxes, classIDs, confidences, self.detector.CLASSES, COLORS=self.detector.COLORS)
-        signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i])  for i in range(len(classIDs))], key=lambda x:get_area(x[1]), reverse=True)
+        signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i])  for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0] * frame.shape[1] * 0.01], key=lambda x:get_area(x[1]), reverse=True)
         # print(signs_o)
         signs = [i[0] for i in signs_o]
         # self.drive_data.set("signs", signs)
 
         boxes, classIDs, confidences = self.detector_std.detect(frame, s=(self.model_res, self.model_res))
         img_out = Utils.draw_boxes(img_out, boxes, classIDs, confidences, self.detector_std.CLASSES, COLORS=self.detector_std.COLORS)
-        for i in signs:
-            self.filter_dict[i] += 1
-        if self.frames_left == thresh:
-            self.frames_left = 0
-            self.filter_dict = dict().fromkeys(self.sings_filter, 0)
-        else:
-            self.frames_left +=1
+        # for i in signs:
+            # self.filter_dict[i] += 1
+        # if self.frames_left == thresh:
+            # self.frames_left = 0
+            # self.filter_dict = dict().fromkeys(self.sings_filter, 0)
+        # else:
+            # self.frames_left +=1
             
         mm = "none"
-        if sum(map(lambda x: x[1], self.filter_dict.items())) > 0:
+        self.hist += signs
+        if len(self.hist) > thresh:
+            self.hist = self.hist[thresh:]
+        self.filter_dict = dict().fromkeys(self.sings_filter, 0)
+        for i in self.hist:
+            self.filter_dict[i] += 1
+        if sum(map(lambda x: x[1], self.filter_dict.items())) > 0 and len(self.hist) > 4:
             mm = max(self.filter_dict.items(), key=lambda x: x[1])[0]
         return img_out, signs, mm
