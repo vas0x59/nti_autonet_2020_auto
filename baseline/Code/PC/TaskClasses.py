@@ -261,6 +261,9 @@ class VisionPovorots:
         self.timeLast = 0
         self.kGo = self.kGo + 1 if self.kGo + 1 < self.nGo else 0
         self.pov = 0
+        self.exit = False
+        self.l = 0
+        self.r = 0
     def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
@@ -285,20 +288,21 @@ class VisionPovorots:
     def run(self, frame):
         perspective = self.vision_func(frame=frame)
         left, right = centre_mass(perspective.copy())
-
+        if self.exit:
+            self.speed = speed
         cv2.imshow("perspective", perspective)
-        if self.pow == 0:   #проверка едит ли он по полигону, или он на перекрестке
+        if self.pov == 0:   #проверка едит ли он по полигону, или он на перекрестке
             self.angle = self.angele(left=left, right=right)
             stop_line = self.detect_stop_line(frame=perspective)
             if stop_line:
                 print("STOP_LINE")
                 self.speed = 1450
                 self.stopeer_f()
-                self.pow = 1
+                self.pov = 1
                 if self.nGo != -1:
-                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (0, 0)
-        else:
-            if self.l == 0 and self.r == 0: # ехать прямо
+                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (1, 1)
+        elif self.exit:
+            if self.l == 1 and self.r == 1: # ехать прямо
                 if left >= 150 and self.next == 0:
                     self.next += 1
                 elif left < 150 and self.next == 1:
@@ -340,7 +344,7 @@ class VisionPovorots:
                 if self.next == 0:
                     self.angle = self.angele(left=left, right=right)
                 elif self.next == 1:
-                    left = 115
+                    left = 130
                     self.angle = self.angele(left=left, right=right)
                 else:
                     self.resetPeret()
@@ -350,7 +354,7 @@ class VisionPovorots:
                 # else:
                 #     if time.time() - self.timeLast >= 0.6 and self.next == 0:
                 #         self.next += 1
-                #     elif time.time() - self.timeLast >= 0.6 and self.next == 1:
+                #     elif time.time() - self.timeLast >= 1 and self.next == 1:
                 #         self.next += 1
                 #     if self.next == 0:
                 #         self.angle = 90

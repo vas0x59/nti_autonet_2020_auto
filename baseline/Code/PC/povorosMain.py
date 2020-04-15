@@ -60,6 +60,7 @@ while cv2.waitKey(10) != ESCAPE:
 
         send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
             
+        #print(ang, spd, vision.l, vision.r)
 
         key = cv2.waitKey(1)
 
