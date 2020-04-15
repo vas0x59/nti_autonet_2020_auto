@@ -77,7 +77,7 @@ class OBJDetection:
         # print(svet)
         # return self.labels[svet.index(max(svet))]
         label = "none"
-        print(svet)
+        # print(svet)
         if max(svet) > 0.5:
             if svet[0] > svet[2] and svet[1] > svet[2] and svet[0] > 0.55 and svet[1] > 0.55 :
                 label = "red_yellow"
