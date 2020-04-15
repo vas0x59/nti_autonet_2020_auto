@@ -263,6 +263,9 @@ class VisionSvetGO:
         self.sign = "none"
         self.sign_hist = []
         self.objd.load()
+        self.pov = 0
+        self.go = 0
+        self.next = 0
     def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
@@ -296,24 +299,41 @@ class VisionSvetGO:
         img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
         cv2.imshow("img_out", img_out)
         perspective = self.vision_func(frame=frame)
-        self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
-        stop_line = self.detect_stop_line(frame=perspective)
-        if stop_line:
-            print("STOP_LINE")
-            self.speed = 1500
-            self.stopeer_f()
-        if self.need_svet == True:
-            if svet_sign == "green":
-                self.speed = speed
-            else:
+        if self.pov == 0:
+            self.angle = self.angele(frame=perspective)
+            stop_line = self.detect_stop_line(frame=perspective)
+            if stop_line:
+                print("STOP_LINE")
                 self.speed = 1500
-            # send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
-        # else:
-            # send_cmd('H00/' + '1450' + '/' + str(angle) + "E")
-            # time.sleep(0.5)
-            # send_cmd('H00/' + str(stop_speed) + '/' + str(angle) + "E")
+                self.stopeer_f()
+                self.pov = 1
+        else:
+            if self.go == 0:
+                if self.need_svet:
+                    if svet_sign == "green":
+                        self.go = 1
+                        self.angle = 87
+                        self.speed = speed
+                    else:
+                        self.go = 0
+                        self.speed = stop_speed
+            else:
+                left, right = centre_mass(perspective.copy())
+                if left >= 150 and self.next == 0:
+                    self.next += 1
+                elif left < 150 and self.next == 1:
+                    self.next += 1
+                if self.next <= 1:
+                    self.angle = 87
+                else:
+                    self.next = 0
+                    self.pov = 0
+                    self.go = 0
+
         return self.angle, self.speed
+    
+   
 class VisionSvetReg:
     def __init__(self, d=0):
         self.d = d
