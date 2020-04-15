@@ -194,6 +194,11 @@ class VisionSvetGO:
         self.speed = speed
         self.exit = False
         self.need_svet = False
+        self.objd = OBJDetection()
+        self.signs = []
+        self.sign = "none"
+        self.sign_hist = []
+        self.objd.load()
     def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
