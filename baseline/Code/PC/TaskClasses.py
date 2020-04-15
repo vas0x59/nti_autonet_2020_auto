@@ -411,6 +411,11 @@ class VisionPovorots:
         binary = binarize(img, d=self.d)
         perspective = trans_perspective(binary, TRAP, RECT, SIZE)
         return perspective
+    def detect_stop_line(self, frame):
+        if (frame[100][180] > 200) and (frame[100][200] > 200) and (frame[100][160] > 200):
+            return True
+        else:
+            return False
     def angele(self, left, right):
         # image = frame.copy()
         # left, right = centre_mass(image, d=self.d)
