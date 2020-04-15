@@ -89,9 +89,9 @@ class OBJDetection:
             elif svet[0] > svet[2] and svet[0] > svet[1]:
                 label = "red"
         self.svet_hist += label
-        if len(self.svet_hist) > 16:
-            self.svet_hist = self.svet_hist[16:]
-        if abs(self.svet_hist.count("green") -self.svet_hist.count("none")) < 2 and  abs((self.svet_hist.count("green") + self.svet_hist.count("none")) - len(self.svet_his)) < 2:
+        if len(self.svet_hist) > 18:
+            self.svet_hist = self.svet_hist[18:]
+        if abs(self.svet_hist.count("green") -self.svet_hist.count("none")) < 2 and  abs((self.svet_hist.count("green") + self.svet_hist.count("none")) - len(self.svet_hist)) < 1:
             label="green_blink"
         return label
 
