@@ -283,6 +283,7 @@ class VisionSvetGO:
         self.pov = 0
         self.go = 0
         self.next = 0
+        # self.need_svet = False
 
     def vision_func(self, frame):
         image = frame.copy()
@@ -316,8 +317,10 @@ class VisionSvetGO:
         self.need_svet = True
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
-        cv2.imshow("img_out", img_out)
+        svet_sign = "none"
+        if self.need_svet == True:
+            img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
+            cv2.imshow("img_out", img_out)
         perspective = self.vision_func(frame=frame)
         cv2.imshow("perspective", perspective)
         if self.pov == 0:
