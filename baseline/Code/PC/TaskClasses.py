@@ -193,6 +193,7 @@ class VisionSvetGO:
         self.angle_pd = PD(kP=KP, kD=KD)
         self.speed = speed
         self.exit = False
+        self.need_svet = False
     def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
@@ -220,7 +221,8 @@ class VisionSvetGO:
         self.speed = stop_speed
         # exit()
         time.sleep(0.1)
-        self.exit = True
+        # self.exit = True
+        self.need_svet = True
     def run(self, frame):
         img_out, ssnow, self.sign, svet_sign = self.objd.run(frame.copy(), thresh=15, conf=0.5)
         perspective = self.vision_func(frame=frame)
@@ -229,8 +231,13 @@ class VisionSvetGO:
         stop_line = self.detect_stop_line(frame=perspective)
         if stop_line:
             print("STOP_LINE")
-            self.speed = 1450
+            self.speed = 1500
             self.stopeer_f()
+        if self.need_svet == True:
+            if svet_sign == "green":
+                self.speed = speed
+            else:
+                self.speed = 1500
             # send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
         # else:
             # send_cmd('H00/' + '1450' + '/' + str(angle) + "E")
