@@ -230,7 +230,7 @@ class VisionPovorots:
     def run(self, frame):
         perspective = self.vision_func(frame=frame)
         left, right = centre_mass(perspective.copy())
-        if not self.exit:
+        if self.exit:
             self.speed = speed
         cv2.imshow("perspective", perspective)
         if self.pov == 0:   #проверка едит ли он по полигону, или он на перекрестке
@@ -286,7 +286,7 @@ class VisionPovorots:
                 if self.next == 0:
                     self.angle = self.angele(left=left, right=right)
                 elif self.next == 1:
-                    left = 115
+                    left = 130
                     self.angle = self.angele(left=left, right=right)
                 else:
                     self.resetPeret()
@@ -296,7 +296,7 @@ class VisionPovorots:
                 # else:
                 #     if time.time() - self.timeLast >= 0.6 and self.next == 0:
                 #         self.next += 1
-                #     elif time.time() - self.timeLast >= 0.6 and self.next == 1:
+                #     elif time.time() - self.timeLast >= 1 and self.next == 1:
                 #         self.next += 1
                 #     if self.next == 0:
                 #         self.angle = 90
