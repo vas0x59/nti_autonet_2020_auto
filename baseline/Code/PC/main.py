@@ -114,10 +114,16 @@ send_cmd(DEFAULT_CMD)
 
 vision = Vision()
 
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+status, frame = client.get_frame(0.25)
+out = cv2.VideoWriter('output_' + str(int(time.time())) +  '.avi',fourcc, 28.0, (frame.shape[1],frame.shape[0]))
+
+
 while cv2.waitKey(10) != ESCAPE:
     status, frame = client.get_frame(0.25)  # read the sent frame
     if status == beholder.Status.OK:
         cv2.imshow("Frame", frame)
+        out.write(frame)
         # frame_copy = frame.copy()
         # perspective = vision.vision_func(frame=frame_copy)
         # angle = vision.angele(frame=perspective)
@@ -133,7 +139,7 @@ while cv2.waitKey(10) != ESCAPE:
         #     send_cmd('H00/' + str(spd) + '/' + str(ang) + "E")
             
 
-        key = cv2.waitKey(1)
+        # key = cv2.waitKey(1)
 
     elif status == beholder.Status.EOS:
         print("End of stream")
@@ -150,3 +156,4 @@ send_cmd(DEFAULT_CMD)  # Stop the car
 sock.close()
 cv2.destroyAllWindows()
 client.stop()
+out.release()
