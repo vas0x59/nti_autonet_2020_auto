@@ -503,31 +503,31 @@ class VisionPovorots:
                     else:
                         self.resetPeret()
             elif self.r == 1:
-                if left >= 150 and self.next == 0:
-                    self.next += 1
-                elif left < 150 and self.next == 1:
-                    self.next += 1
-                if self.next == 0:
-                    self.angle = self.angele(left=left, right=right)
-                elif self.next == 1:
-                    left = 130
-                    self.angle = self.angele(left=left, right=right)
-                else:
-                    self.resetPeret()
-
-                # if self.timeLast == 0: # По времени
-                #     self.timeLast = time.time()
+                # if left >= 150 and self.next == 0:
+                #     self.next += 1
+                # elif left < 150 and self.next == 1:
+                #     self.next += 1
+                # if self.next == 0:
+                #     self.angle = self.angele(left=left, right=right)
+                # elif self.next == 1:
+                #     left = 130
+                #     self.angle = self.angele(left=left, right=right)
                 # else:
-                #     if time.time() - self.timeLast >= 0.6 and self.next == 0:
-                #         self.next += 1
-                #     elif time.time() - self.timeLast >= 1 and self.next == 1:
-                #         self.next += 1
-                #     if self.next == 0:
-                #         self.angle = 90
-                #     elif self.next == 1:
-                #         self.angle = 90 - 25
-                #     else:
-                #         self.resetPeret()
+                #     self.resetPeret()
+
+                if self.timeLast == 0: # По времени
+                    self.timeLast = time.time()
+                else:
+                    if time.time() - self.timeLast >= 0.5 and self.next == 0:
+                        self.next += 1
+                    elif time.time() - self.timeLast >= 2.5 and self.next == 1:
+                        self.next += 1
+                    if self.next == 0:
+                        self.angle = 87
+                    elif self.next == 1:
+                        self.angle = 87 - 25
+                    else:
+                        self.resetPeret()
                 
 
         return self.angle, self.speed
