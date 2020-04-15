@@ -232,14 +232,14 @@ class VisionPovorots:
         left, right = centre_mass(perspective.copy())
 
         cv2.imshow("perspective", perspective)
-        if self.pow == 0:   #проверка едит ли он по полигону, или он на перекрестке
+        if self.pov == 0:   #проверка едит ли он по полигону, или он на перекрестке
             self.angle = self.angele(left=left, right=right)
             stop_line = self.detect_stop_line(frame=perspective)
             if stop_line:
                 print("STOP_LINE")
                 self.speed = 1450
                 self.stopeer_f()
-                self.pow = 1
+                self.pov = 1
                 if self.nGo != -1:
                     self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (0, 0)
         else:
