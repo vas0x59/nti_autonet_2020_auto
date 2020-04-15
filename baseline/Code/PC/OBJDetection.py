@@ -16,10 +16,10 @@ class OBJDetection:
         # self.model_w_path = "yolo_sign_model_v1/yolov3_signs_v1_12800.weights"
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
-        self.model_w_path = "yolo_sign_v2/yolov3_cfg_186000.weights"
+        self.model_w_path = "yolo_sign_v2/yolov3_cfg_200000.weights"
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
-        self.model_res = 416
+        self.model_res = 320
         self.sings_filter = ["pedestrian", "stop", "parking",
                              "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]
         self.filter_dict = dict().fromkeys(self.sings_filter, 0)
@@ -97,7 +97,7 @@ class OBJDetection:
 
 
     def run(self, frame, thresh=6, conf=0.5):
-        # frame = frame[:, frame.shape[1] // 2:]
+        frame = frame[:, frame.shape[1] // 6*2:]
         boxes, classIDs, confidences = self.detector.detect(
             frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(
