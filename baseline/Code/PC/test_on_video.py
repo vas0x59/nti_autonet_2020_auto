@@ -13,6 +13,7 @@ b = 0
 i = 0
 while (cv.waitKey(1) != 27):
     ret, frame = cap.read()
+    frame = np.array(frame*0.8, dtype="uint8")
     # frame_copy = frame.copy()
     # perspective = vision.vision_func(frame=frame_copy)
     # cv.imshow("perspective", perspective)
