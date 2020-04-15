@@ -454,7 +454,7 @@ class VisionPovorots:
                 elif left < 150 and self.next == 1:
                     self.next += 1
                 if self.next <= 1:
-                    self.angle = 90
+                    self.angle = 87
                 else:
                     self.resetPeret()
 
@@ -477,9 +477,9 @@ class VisionPovorots:
                     if time.time() - self.timeLast >= 0.9:
                         self.next += 1
                     if self.next == 0:
-                        self.angle = 90
+                        self.angle = 87
                     elif self.next == 1:
-                        self.angle = 90 + 25
+                        self.angle = 87 + 25
                     else:
                         self.resetPeret()
             elif self.r == 1:
