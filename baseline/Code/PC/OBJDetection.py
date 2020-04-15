@@ -16,10 +16,10 @@ class OBJDetection:
         # self.model_w_path = "yolo_sign_model_v1/yolov3_signs_v1_12800.weights"
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
-        self.model_w_path = "yolo_sign_v2/yolov3_cfg_81000.weights"
+        self.model_w_path = "yolo_sign_v2/yolov3_cfg_186000.weights"
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
-        self.model_res = 320
+        self.model_res = 416
         self.sings_filter = ["pedestrian", "stop", "parking",
                              "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]
         self.filter_dict = dict().fromkeys(self.sings_filter, 0)
@@ -58,9 +58,9 @@ class OBJDetection:
         # crop2 = crop2[:, :, 2]s
         crop2 = cv.medianBlur(crop2, 3)
         cv2.imshow("crop2", crop2)
-        redCrop = crop2[int(h// 15):h//15*4]
+        redCrop = crop2[int(0):h//15*4]
         yellowCrop = crop2[h//15*5:h//15*9]
-        greenCrop = crop2[h//15*10:int(h// 15 * 14)]
+        greenCrop = crop2[h//15*10:int(h// 15 * 15)]
         # cv2.imshow("cr", crop2)
         # cv2.waitKey(1)
         # svet[0] = np.sum(redCrop[:,:,2]) / (w*h)
@@ -91,7 +91,7 @@ class OBJDetection:
 
 
     def run(self, frame, thresh=6, conf=0.5):
-        frame = frame[:, frame.shape[1] // 2:]
+        # frame = frame[:, frame.shape[1] // 2:]
         boxes, classIDs, confidences = self.detector.detect(
             frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(
@@ -102,14 +102,14 @@ class OBJDetection:
         # print(signs_o)
         signs = [i[0] for i in signs_o]
         # self.drive_data.set("signs", signs)
-        svet_label = "none"
+        svet_label = "nothing"
         if "traffic_light" in [self.detector.CLASSES[i] for i in classIDs]:
             svet = max([(confidences[i], boxes[i]) for i in range(len(
                 classIDs)) if self.detector.CLASSES[classIDs[i]] == "traffic_light"], key=lambda x: x[0])[1]
             # svet = svet
             svet_label = self.predict_svet(frame[np.clip(svet[1], 0, frame.shape[0]):np.clip(
                 svet[1] + svet[3], 0, frame.shape[0]), np.clip(svet[0], 0, frame.shape[1]):np.clip(svet[0] + svet[2], 0, frame.shape[1])])
-        print(svet_label)
+        # print(svet_label)
         # boxes, classIDs, confidences = self.detector_std.detect(
         #     frame, s=(self.model_res, self.model_res))
         # img_out = Utils.draw_boxes(img_out, boxes, classIDs, confidences,
@@ -131,4 +131,4 @@ class OBJDetection:
             self.filter_dict[i] += 1
         if sum(map(lambda x: x[1], self.filter_dict.items())) > 0 and len(self.hist) > 4:
             mm = max(self.filter_dict.items(), key=lambda x: x[1])[0]
-        return img_out, signs, mm
+        return img_out, signs, mm, svet_label
