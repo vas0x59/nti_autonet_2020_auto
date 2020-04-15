@@ -112,8 +112,13 @@ cv2.namedWindow("Frame")
 
 send_cmd(DEFAULT_CMD)
 
-vision = Vision()
+vision = VisionSvetReg()
 
+status, frame = client.get_frame(0.25)
+status, frame = client.get_frame(0.25)
+status, frame = client.get_frame(0.25)
+status, frame = client.get_frame(0.25)
+status, frame = client.get_frame(0.25)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 status, frame = client.get_frame(0.25)
 out = cv2.VideoWriter('output_' + str(int(time.time())) +  '.avi',fourcc, 28.0, (frame.shape[1],frame.shape[0]))

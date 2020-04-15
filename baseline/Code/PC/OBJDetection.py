@@ -16,7 +16,7 @@ class OBJDetection:
         # self.model_w_path = "yolo_sign_model_v1/yolov3_signs_v1_12800.weights"
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
-        self.model_w_path = "yolo_sign_v2/yolov3_cfg_216000.weights" # signs200 all197 208 ok
+        self.model_w_path = "yolo_sign_v2/yolov3_cfg_208000.weights" # signs200 all197 208 ok
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
         self.model_res = 416
@@ -78,11 +78,12 @@ class OBJDetection:
         # print(svet)
         # return self.labels[svet.index(max(svet))]
         label = "none"
+        svet[2]  = svet[2] *1.03
         # print(svet)
-        if max(svet) > 0.45:
-            if svet[0] > svet[2] and svet[1] > svet[2] and svet[0] > 0.55 and svet[1] > 0.55 :
+        if max(svet) > 0.38:
+            if svet[0] > svet[2] and svet[1] > svet[2] and svet[0] > 0.45 and svet[1] > 0.45 :
                 label = "red_yellow"
-            elif svet[2]*1 > svet[0] and svet[2]*1 > svet[1]:
+            elif svet[2] > svet[0] and svet[2] > svet[1]:
                 label = "green"
             elif svet[1] > svet[2] and svet[1] > svet[0]:
                 label = "yellow"
@@ -97,7 +98,7 @@ class OBJDetection:
 
 
     def run(self, frame, thresh=6, conf=0.5):
-        frame = frame[:, frame.shape[1] // 6*0:]
+        frame = frame[:, frame.shape[1] // 6*2:]
         boxes, classIDs, confidences = self.detector.detect(
             frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(
