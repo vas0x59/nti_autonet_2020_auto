@@ -109,7 +109,9 @@ class Vision:
                     if self.timeNow == 0:
                         self.timeNow = time.time()
                     else:
-                        if time.time() - self.timeNow >= 0.9:
+                        if time.time() - self.timeLast >= 0.9 and self.next == 0:
+                            self.next += 1
+                        elif time.time() - self.timeLast >= 2.5 and self.next == 1:
                             self.next += 1
                         if self.next == 0:
                             self.angle = 87
@@ -118,16 +120,18 @@ class Vision:
                         else:
                             self.resetPeret()
                 elif self.r == 1:  # ехать на право
-                    if left >= 150 and self.next == 0:
-                        self.next += 1
-                    elif left < 150 and self.next == 1:
-                        self.next += 1
-                    if self.next == 0:
-                        self.angle = self.angele(left=left, right=right)
-                    elif self.next == 1:
-                        left = 130
-                        self.angle = self.angele(left=left, right=right)
+                    if self.timeLast == 0:  # По времени
+                        self.timeLast = time.time()
                     else:
-                        self.resetPeret()
+                        if time.time() - self.timeLast >= 0.5 and self.next == 0:
+                            self.next += 1
+                        elif time.time() - self.timeLast >= 2.5 and self.next == 1:
+                            self.next += 1
+                        if self.next == 0:
+                            self.angle = 87
+                        elif self.next == 1:
+                            self.angle = 87 - 30
+                        else:
+                            self.resetPeret()
 
         return self.angle, self.speed
