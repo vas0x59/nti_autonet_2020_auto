@@ -67,7 +67,6 @@ class Vision:
         self.need_svet = True
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
         cv2.imshow("img_out", img_out)
         perspective = self.vision_func(frame=frame)
         left, right = centre_mass(perspective.copy())
@@ -87,6 +86,7 @@ class Vision:
 
         else:
             if self.go == 0:
+                img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
                 if self.need_svet:
                     if svet_sign == "green":
                         self.go = 1
