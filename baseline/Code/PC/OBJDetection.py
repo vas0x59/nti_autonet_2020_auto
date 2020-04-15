@@ -26,6 +26,7 @@ class OBJDetection:
         self.frames_left = 0
         self.hist = []
         self.labels = ['red', 'yellow', 'green']
+        self.svet_hist = []
         """
         pedestrian
         no_drive
@@ -78,7 +79,7 @@ class OBJDetection:
         # return self.labels[svet.index(max(svet))]
         label = "none"
         # print(svet)
-        if max(svet) > 0.5:
+        if max(svet) > 0.45:
             if svet[0] > svet[2] and svet[1] > svet[2] and svet[0] > 0.55 and svet[1] > 0.55 :
                 label = "red_yellow"
             elif svet[2]*1 > svet[0] and svet[2]*1 > svet[1]:
@@ -87,6 +88,11 @@ class OBJDetection:
                 label = "yellow"
             elif svet[0] > svet[2] and svet[0] > svet[1]:
                 label = "red"
+        self.svet_hist += label
+        if len(self.svet_hist) > 16:
+            self.svet_hist = self.svet_hist[16:]
+        if abs(self.svet_hist.count("green") -self.svet_hist.count("none")) < 2 and  abs((self.svet_hist.count("green") + self.svet_hist.count("none")) - len(self.svet_his)) < 2:
+            label="green_blink"
         return label
 
 
@@ -119,6 +125,8 @@ class OBJDetection:
             color = (0, 255, 255)
         elif svet_label=="red_yellow":
             color = (0, 150, 255)
+        elif svet_label == "green_blink":
+            color = (0, 255, 110)
         cv2.putText(img_out, svet_label, (10, 10), cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, color, 2)
         # print(svet_label)
