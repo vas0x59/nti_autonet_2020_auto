@@ -479,7 +479,7 @@ class VisionPovorots:
                     if self.next == 0:
                         self.angle = 87
                     elif self.next == 1:
-                        self.angle = 87 + 25
+                        self.angle = 87 + 26
                     else:
                         self.resetPeret()
             elif self.r == 1:
