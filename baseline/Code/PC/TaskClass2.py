@@ -28,6 +28,7 @@ class Vision:
         self.nKyda = len(self.kyda)  # Количество маршрутов
 
     def resetPeret(self):
+        self.need_svet = False
         self.next = 0
         self.go = 0
         self.pov = 0
