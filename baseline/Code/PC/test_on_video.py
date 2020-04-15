@@ -1,7 +1,7 @@
 import cv2 as cv
 from func import *
 from TaskClasses import *
-cap = cv.VideoCapture("Videos/Sign3.mkv")
+cap = cv.VideoCapture("Videos/Sign_and_person.mkv")
 if cap.isOpened() == False:
     print("Cannot open input video")
     exit()
