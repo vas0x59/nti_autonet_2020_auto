@@ -206,6 +206,9 @@ class VisionPovorots:
         self.timeLast = 0
         self.kGo = self.kGo + 1 if self.kGo + 1 < self.nGo else 0
         self.pov = 0
+        self.exit = False
+        self.l = 0
+        self.r = 0
     def vision_func (self, frame):
         image = frame.copy()
         img = cv2.resize(image, (400, 300))
@@ -242,9 +245,9 @@ class VisionPovorots:
                 self.stopeer_f()
                 self.pov = 1
                 if self.nGo != -1:
-                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (0, 0)
+                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (1, 1)
         elif self.exit:
-            if self.l == 0 and self.r == 0: # ехать прямо
+            if self.l == 1 and self.r == 1: # ехать прямо
                 if left >= 150 and self.next == 0:
                     self.next += 1
                 elif left < 150 and self.next == 1:
