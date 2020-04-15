@@ -230,7 +230,8 @@ class VisionPovorots:
     def run(self, frame):
         perspective = self.vision_func(frame=frame)
         left, right = centre_mass(perspective.copy())
-
+        if not self.exit:
+            self.speed = speed
         cv2.imshow("perspective", perspective)
         if self.pov == 0:   #проверка едит ли он по полигону, или он на перекрестке
             self.angle = self.angele(left=left, right=right)
@@ -242,7 +243,7 @@ class VisionPovorots:
                 self.pov = 1
                 if self.nGo != -1:
                     self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (0, 0)
-        else:
+        elif self.exit:
             if self.l == 0 and self.r == 0: # ехать прямо
                 if left >= 150 and self.next == 0:
                     self.next += 1
