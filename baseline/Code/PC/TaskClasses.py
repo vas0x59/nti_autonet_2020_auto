@@ -335,6 +335,7 @@ class VisionSvetGO:
             if self.go == 0:
                 if self.need_svet:
                     if svet_sign == "green":
+                        self.need_svet = False
                         self.go = 1
                         self.angle = 87
                         self.speed = speed
