@@ -49,7 +49,7 @@ cv2.namedWindow("Frame")
 
 send_cmd(DEFAULT_CMD)
 
-vision = VisionPovorots(go=['f', 'r', 'l', 'r', 'f', 'l'])
+vision = VisionPovorots(go=['l'])
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 status, frame = client.get_frame(0.25)
