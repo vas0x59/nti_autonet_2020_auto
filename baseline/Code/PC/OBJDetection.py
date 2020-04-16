@@ -16,7 +16,8 @@ class OBJDetection:
         # self.model_w_path = "yolo_sign_model_v1/yolov3_signs_v1_12800.weights"
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
-        self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
+        # self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
+        self.model_w_path ="yolo_sign_v2/yolov3_cfg_393000.weights"
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
         self.model_res = 320

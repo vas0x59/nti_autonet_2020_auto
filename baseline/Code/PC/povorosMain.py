@@ -85,5 +85,5 @@ sock.close()
 cv2.destroyAllWindows()
 client.stop()
 out.release()
-if hasattr(vison, 'client'):
+if hasattr(vsion, 'client'):
     vision.client.loop_stop(force=False)
