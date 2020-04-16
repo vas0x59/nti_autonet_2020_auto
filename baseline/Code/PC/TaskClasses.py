@@ -178,7 +178,7 @@ class VisionPersonStop:
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
         cv2.imshow("img_out", img_out)
-        
+
         # stop_line = self.detect_stop_line(frame=perspective)
         # if stop_line:
         #     print("STOP_LINE")
@@ -244,7 +244,7 @@ class VisionSignHist:
 
     def run(self, frame):
         img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.4)
-        
+
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
@@ -365,7 +365,6 @@ class VisionSvetGO:
         return self.angle, self.speed
 
 
-
 class VisionSvetGONoStop:
     def __init__(self, d=0):
         self.d = d
@@ -419,42 +418,35 @@ class VisionSvetGONoStop:
 
     def run(self, frame):
         svet_sign = "none"
+        perspective = self.vision_func(frame=frame)
         if self.need_svet == True:
             img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
             cv2.imshow("img_out", img_out)
-        perspective = self.vision_func(frame=frame)
-        cv2.imshow("perspective", perspective)
-        if self.pov == 0:
-            self.angle = self.angele(frame=perspective)
-            stop_line = self.detect_stop_line(frame=perspective)
-            # if stop_line:
-            #     print("STOP_LINE")
-            #     self.speed = 1500
-            #     self.stopeer_f()
-            #     self.pov = 1
         else:
-            if self.go == 0:
-                if self.need_svet:
-                    if svet_sign == "green":
-                        self.need_svet = False
-                        self.go = 1
-                        self.angle = 87
-                        self.speed = speed
-                    else:
-                        self.go = 0
-                        self.speed = stop_speed
-            else:
-                left, right = centre_mass(perspective.copy())
-                if left >= 150 and self.next == 0:
-                    self.next += 1
-                elif left < 150 and self.next == 1:
-                    self.next += 1
-                if self.next <= 1:
+            self.angle = self.angele(frame=perspective)
+        cv2.imshow("perspective", perspective)
+        if self.go == 0:
+            if self.need_svet:
+                if svet_sign == "green":
+                    self.need_svet = False
+                    self.go = 1
                     self.angle = 87
+                    self.speed = speed
                 else:
-                    self.next = 0
-                    self.pov = 0
                     self.go = 0
+                    self.speed = stop_speed
+        else:
+            left, right = centre_mass(perspective.copy())
+            if left >= 150 and self.next == 0:
+                self.next += 1
+            elif left < 150 and self.next == 1:
+                self.next += 1
+            if self.next <= 1:
+                self.angle = 87
+            else:
+                self.next = 0
+                self.pov = 0
+                self.go = 0
 
         return self.angle, self.speed
 
@@ -602,7 +594,8 @@ class VisionPovorots:
                 self.stopeer_f()
                 self.pov = 1
                 if self.nGo != -1:
-                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (1, 1)
+                    self.l, self.r = (1, 0) if self.Go[self.kGo] == 'l' else (0, 1) if self.Go[self.kGo] == 'r' else (
+                    1, 1)
         elif self.exit:
             if self.l == 1 and self.r == 1:  # ехать прямо
                 if left >= 150 and self.next == 0:
