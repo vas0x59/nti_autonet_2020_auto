@@ -21,7 +21,6 @@ class Vision:
         self.sign = "none"
         self.sign_hist = []
         self.objd.load()
-        self.objdSvet.load()
         self.l = 0
         self.r = 0
         self.pov = 0
