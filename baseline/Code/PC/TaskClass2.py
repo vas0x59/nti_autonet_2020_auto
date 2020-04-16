@@ -89,7 +89,6 @@ class Vision:
         self.need_svet = True
 
     def run(self, frame):
-        cv2.imshow("img_out", img_out)
         perspective = self.vision_func(frame=frame)
         left, right = centre_mass(perspective.copy())
         cv2.imshow("perspective", perspective)
