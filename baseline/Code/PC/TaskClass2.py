@@ -48,6 +48,7 @@ class Vision:
         
         self.kyda += list(klocal)
         self.nKyda = len(self.kyda)
+        print(self.nKyda, self.kyda)
     def resetPeret(self):
         self.need_svet = False
         self.next = 0
