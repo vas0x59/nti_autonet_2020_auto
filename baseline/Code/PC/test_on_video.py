@@ -8,7 +8,7 @@ if cap.isOpened() == False:
 
 # vision = VisionStopSign()
 # vision = Vision()
-vision = VisionSignHist()
+vision = VisionPersonCounter()
 b = 0
 i = 0
 while (cv.waitKey(1) != 27):

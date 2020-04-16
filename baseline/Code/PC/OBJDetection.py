@@ -3,6 +3,7 @@ import numpy as np
 from obj_detectors.Detectors.YoloOpencvDetector import YoloOpencvDetector
 from obj_detectors.Detectors import Utils
 import cv2
+import time
 cv = cv2
 def get_area(p):
     return p[2]*p[3]
@@ -32,6 +33,8 @@ class OBJDetection:
         self.svet_hist = []
         self.svet_enable = False
         self.sign_enable = True
+        self.person_calc = 0
+        self.last_person_time = 0
         """
         pedestrian
         no_drive
@@ -117,6 +120,9 @@ class OBJDetection:
         # person = 10 in classIDs
         # print(persons)
         person = len(persons) > 0
+        if person and time.time() - self.last_person_time > 1:
+            self.person_calc += 1
+            self.last_person_time = time.time()
         cv2.putText(img_out, str(person), (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
                         0.5, (255, 0, 150), 2)
         signs = []
