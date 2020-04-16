@@ -3,10 +3,6 @@ from OBJDetection import OBJDetection
 import paho.mqtt.client as mqtt
 import time
 
-
-# import threading
-
-
 class Vision:
     def __init__(self, d=0):
         self.d = d
@@ -38,6 +34,7 @@ class Vision:
         self.client.connect("192.168.1.208", 1883, 60)
         self.loop_start()
         time.sleep(1)
+        
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code " + str(rc))
 
@@ -66,6 +63,7 @@ class Vision:
         self.nKyda = len(self.kyda)
         self.l = 0
         self.r = 0
+        self.signStop = 0
         self.objd.svet_enable = False
         self.objd.sign_enable = True
 
@@ -119,27 +117,28 @@ class Vision:
         cv2.imshow("perspective", perspective)
         if self.pov == 0:
             self.need_svet = False
-            self.angle = self.angele(left=left, right=right)
             stop_line = self.detect_stop_line(frame=perspective)
             if stop_line:
                 self.objd.svet_enable = True
                 self.objd.sign_enable = False
                 print("STOP_LINE")
+                self.angle = 88
                 self.speed = 1500
                 self.stopeer_f()
                 self.pov = 1
                 if self.nKyda > 0:
                     self.l, self.r = (1, 0) if self.kyda[0] == 'l' else (0, 1) if self.kyda[0] == 'r' else (1, 1)
-                else:  # тут если список закончился, надо будет написать, чтобы ждал получение нового напрвления
+                else: 
                     self.speed = 1500
-
+            else:
+                self.angle = self.angele(left=left, right=right)
         else:
             if self.go == 0:
                 img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
                 if self.need_svet:
                     if svet_sign == "green":
                         self.go = 1
-                        self.angle = 87
+                        self.angle = 88
                         self.speed = speed
                     else:
                         self.go = 0
@@ -151,21 +150,21 @@ class Vision:
                     elif left < 150 and self.next == 1:
                         self.next += 1
                     if self.next <= 1:
-                        self.angle = 87
+                        self.angle = 88
                     else:
                         self.resetPeret()
                     print("Forward = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
                 elif self.l == 1:  # Ехать на лево
                     self.speed = self.speedPovorot
-                    if time.time() - self.timeLast >= 1.5 and self.next == 0:
+                    if time.time() - self.timeLast >= 0.9 and self.next == 0:
                         self.next += 1
                         self.timeLast = 0
-                    elif time.time() - self.timeLast >= 2.5 and self.next == 1:
+                    elif time.time() - self.timeLast >= 3.5 and self.next == 1:
                         self.next += 1
                     if self.next == 0:
-                        self.angle = 87
+                        self.angle = 88
                     elif self.next == 1:
-                        self.angle = 87 + 26
+                        self.angle = 88 + 25
                     else:
                         self.resetPeret()
                     print("Left = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
