@@ -84,3 +84,6 @@ sock.close()
 cv2.destroyAllWindows()
 client.stop()
 out.release()
+
+if vision.client != None:
+    vision.client.loop_stop(force=False)
