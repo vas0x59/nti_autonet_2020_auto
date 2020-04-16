@@ -686,13 +686,13 @@ class VisionPovorots:
                 if self.timeLast == 0:
                     self.timeLast = time.time()
                 else:
-                    if time.time() - self.timeLast >= 1.5 and self.next == 0:
+                    if time.time() - self.timeLast >= 1 and self.next == 0:
                         self.next += 1
                         self.timeLast = 0
-                    elif time.time() - self.timeLast >= 3.2 and self.next == 1:
+                    elif time.time() - self.timeLast >= 3.5 and self.next == 1:
                         self.next += 1
                     if self.next == 0:
-                        self.angle = 87
+                        self.angle = 88
                     elif self.next == 1:
                         self.angle = 87 + 28
                     else:
