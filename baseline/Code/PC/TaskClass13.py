@@ -12,11 +12,11 @@ class Vision:
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
+        self.speedPovorot = 1550
         self.speed = speed
         self.exit = False
         self.need_svet = False
         self.objd = OBJDetection()
-        self.objdSvet = OBJDetection()
         self.signs = []
         self.sign = "none"
         self.sign_hist = []
@@ -32,8 +32,6 @@ class Vision:
         self.nKyda = len(self.kyda)  # Количество маршрутов
         self.objd.svet_enable = False
         self.objd.sign_enable = True
-        self.objdSvet.svet_enable = True
-        self.objdSvet.sign_enable = False
         self.signStop = 0
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
@@ -69,6 +67,8 @@ class Vision:
         self.nKyda = len(self.kyda)
         self.l = 0
         self.r = 0
+        self.objd.svet_enable = False
+        self.objd.sign_enable = True
 
     def vision_func(self, frame):
         image = frame.copy()
@@ -98,8 +98,9 @@ class Vision:
         self.need_svet = True
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
-        cv2.imshov("img_out", img_out)
+        if self.objd.sign_enable:
+            img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
+            cv2.imshov("img_out", img_out)
         if person:
             self.speed = 1500
             self.stopeer_f()
@@ -122,6 +123,8 @@ class Vision:
             self.angle = self.angele(left=left, right=right)
             stop_line = self.detect_stop_line(frame=perspective)
             if stop_line:
+                self.objd.svet_enable = True
+                self.objd.sign_enable = False
                 print("STOP_LINE")
                 self.speed = 1500
                 self.stopeer_f()
@@ -133,7 +136,7 @@ class Vision:
 
         else:
             if self.go == 0:
-                img_out, ssnow, self.sign, svet_sign, person = self.objdSvet.run(frame.copy(), thresh=15, conf=0.5)
+                img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
                 if self.need_svet:
                     if svet_sign == "green":
                         self.go = 1
