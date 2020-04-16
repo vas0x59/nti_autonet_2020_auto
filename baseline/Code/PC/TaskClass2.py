@@ -106,20 +106,21 @@ class Vision:
                         self.angle = 87
                     else:
                         self.resetPeret()
+                    print("Forward = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
                 elif self.l == 1:  # Ехать на лево
-                    if self.timeNow == 0:
-                        self.timeNow = time.time()
+                    if time.time() - self.timeLast >= 1.5 and self.next == 0:
+                        self.next += 1
+                        self.timeLast = 0
+                    elif time.time() - self.timeLast >= 2.5 and self.next == 1:
+                        self.next += 1
+                    # print(self.next)
+                    if self.next == 0:
+                        self.angle = 87
+                    elif self.next == 1:
+                        self.angle = 87 + 26
                     else:
-                        if time.time() - self.timeLast >= 0.9 and self.next == 0:
-                            self.next += 1
-                        elif time.time() - self.timeLast >= 2.5 and self.next == 1:
-                            self.next += 1
-                        if self.next == 0:
-                            self.angle = 87
-                        elif self.next == 1:
-                            self.angle = 87 + 26
-                        else:
-                            self.resetPeret()
+                        self.resetPeret()
+                    print("Left = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
                 elif self.r == 1:  # ехать на право
                     if self.timeLast == 0:  # По времени
                         self.timeLast = time.time()
@@ -134,5 +135,6 @@ class Vision:
                             self.angle = 87 - 30
                         else:
                             self.resetPeret()
+                        print("Right = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
 
         return self.angle, self.speed
