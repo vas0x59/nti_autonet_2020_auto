@@ -365,12 +365,106 @@ class VisionSvetGO:
         return self.angle, self.speed
 
 
+
+class VisionSvetGONoStop:
+    def __init__(self, d=0):
+        self.d = d
+        self.last = 0
+        self.angle_pd = PD(kP=KP, kD=KD)
+        self.speed = 1500
+        self.exit = False
+        self.need_svet = True
+        self.objd = OBJDetection()
+        self.signs = []
+        self.sign = "none"
+        self.sign_hist = []
+        self.objd.load()
+        self.pov = 1
+        self.go = 0
+        self.next = 0
+        self.objd.svet_enable = True
+        self.objd.sign_enable = False
+        # self.need_svet = False
+
+    def vision_func(self, frame):
+        image = frame.copy()
+        img = cv2.resize(image, (400, 300))
+        binary = binarize(img, d=self.d)
+        perspective = trans_perspective(binary, TRAP, RECT, SIZE)
+        return perspective
+
+    def detect_stop_line(self, frame):
+        if (frame[100][180] > 200) and (frame[100][200] > 200) and (frame[100][160] > 200):
+            return True
+        else:
+            return False
+
+    def angele(self, frame):
+        image = frame.copy()
+        left, right = centre_mass(image, d=self.d)
+        angle = self.angle_pd.calc(left=left, right=right)
+        if angle < 70:
+            angle = 70
+        elif angle > 106:
+            angle = 104
+        return angle
+
+    @delay(delay=0.5)
+    def stopeer_f(self):
+        self.speed = stop_speed
+        # exit()
+        time.sleep(0.1)
+        # self.exit = True
+        self.need_svet = True
+
+    def run(self, frame):
+        svet_sign = "none"
+        if self.need_svet == True:
+            img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
+            cv2.imshow("img_out", img_out)
+        perspective = self.vision_func(frame=frame)
+        cv2.imshow("perspective", perspective)
+        if self.pov == 0:
+            self.angle = self.angele(frame=perspective)
+            stop_line = self.detect_stop_line(frame=perspective)
+            # if stop_line:
+            #     print("STOP_LINE")
+            #     self.speed = 1500
+            #     self.stopeer_f()
+            #     self.pov = 1
+        else:
+            if self.go == 0:
+                if self.need_svet:
+                    if svet_sign == "green":
+                        self.need_svet = False
+                        self.go = 1
+                        self.angle = 87
+                        self.speed = speed
+                    else:
+                        self.go = 0
+                        self.speed = stop_speed
+            else:
+                left, right = centre_mass(perspective.copy())
+                if left >= 150 and self.next == 0:
+                    self.next += 1
+                elif left < 150 and self.next == 1:
+                    self.next += 1
+                if self.next <= 1:
+                    self.angle = 87
+                else:
+                    self.next = 0
+                    self.pov = 0
+                    self.go = 0
+
+        return self.angle, self.speed
+
+
 class VisionSvetReg:
     def __init__(self, d=0):
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
-        self.speed = speed
+        self.speed = 1500
         self.exit = False
         self.need_svet = False
         self.objd = OBJDetection()
