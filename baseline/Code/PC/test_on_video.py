@@ -1,14 +1,14 @@
 import cv2 as cv
 from func import *
 from TaskClasses import *
-cap = cv.VideoCapture("Videos/output_1586958401.avi")
+cap = cv.VideoCapture("Videos/Sign_and_person.mkv")
 if cap.isOpened() == False:
     print("Cannot open input video")
     exit()
 
 # vision = VisionStopSign()
 # vision = Vision()
-vision = VisionSvetReg()
+vision = VisionPersonStop()
 b = 0
 i = 0
 while (cv.waitKey(1) != 27):

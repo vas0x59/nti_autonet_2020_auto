@@ -138,6 +138,9 @@ class VisionPersonStop:
         self.sign_hist = []
         self.objd.load()
         self.exit = False
+        # self.svet_enbale  = False
+        self.objd.svet_enable = False
+        self.objd.sign_enable = False
 
     def vision_func(self, frame):
         image = frame.copy()
@@ -175,6 +178,7 @@ class VisionPersonStop:
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
         cv2.imshow("img_out", img_out)
+        
         # stop_line = self.detect_stop_line(frame=perspective)
         # if stop_line:
         #     print("STOP_LINE")
@@ -240,6 +244,7 @@ class VisionSignHist:
 
     def run(self, frame):
         img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.4)
+        
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
@@ -283,6 +288,8 @@ class VisionSvetGO:
         self.pov = 0
         self.go = 0
         self.next = 0
+        self.objd.svet_enable = True
+        self.objd.sign_enable = False
         # self.need_svet = False
 
     def vision_func(self, frame):
@@ -371,6 +378,8 @@ class VisionSvetReg:
         self.sign = "none"
         self.sign_hist = []
         self.objd.load()
+        self.objd.svet_enable = True
+        self.objd.sign_enable = False
 
     def vision_func(self, frame):
         image = frame.copy()

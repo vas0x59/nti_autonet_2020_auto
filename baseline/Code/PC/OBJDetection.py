@@ -27,6 +27,8 @@ class OBJDetection:
         self.hist = []
         self.labels = ['red', 'yellow', 'green']
         self.svet_hist = []
+        self.svet_enable = False
+        self.sign_enable = True
         """
         pedestrian
         no_drive
@@ -104,36 +106,40 @@ class OBJDetection:
             frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(
             frame, boxes, classIDs, confidences, self.detector.CLASSES, COLORS=self.detector.COLORS)
-
-        signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i]) for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0]
-                          * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter], key=lambda x: get_area(x[1]), reverse=True)
+        if self.sign_enable ==True:
+            signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i]) for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0]
+                            * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter], key=lambda x: get_area(x[1]), reverse=True)
         # print(signs_o)
         person = 10 in classIDs
-        signs = [i[0] for i in signs_o]
+        signs = []
+        if self.sign_enable ==True:
+            signs = [i[0] for i in signs_o]
         # self.drive_data.set("signs", signs)
+
         svet_label = "nothing"
-        if "traffic_light" in [self.detector.CLASSES[i] for i in classIDs]:
-            svet = max([(confidences[i], boxes[i]) for i in range(len(
-                classIDs)) if self.detector.CLASSES[classIDs[i]] == "traffic_light"], key=lambda x: x[0])[1]
-            # svet = svet
-            svet_label = self.predict_svet(frame[np.clip(svet[1], 0, frame.shape[0]):np.clip(
-                svet[1] + svet[3], 0, frame.shape[0]), np.clip(svet[0], 0, frame.shape[1]):np.clip(svet[0] + svet[2], 0, frame.shape[1])])
-        color = (0, 0, 0)
-        if svet_label == "red":
-            color = (0, 0, 255)
-        elif svet_label == "green":
-            color = (0, 255, 0)
-        elif svet_label == "yellow":
-            color = (0, 255, 255)
-        elif svet_label=="red_yellow":
-            color = (0, 150, 255)
-        elif svet_label == "green_blink":
-            color = (0, 255, 110)
-        cv2.putText(img_out, svet_label, (10, 10), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5, color, 2)
-        if svet_label == "nothing" and len(self.svet_hist) > 0:
-            del self.svet_hist[-1]
-        print(self.svet_hist)
+        if self.svet_enable == True:
+            if "traffic_light" in [self.detector.CLASSES[i] for i in classIDs]:
+                svet = max([(confidences[i], boxes[i]) for i in range(len(
+                    classIDs)) if self.detector.CLASSES[classIDs[i]] == "traffic_light"], key=lambda x: x[0])[1]
+                # svet = svet
+                svet_label = self.predict_svet(frame[np.clip(svet[1], 0, frame.shape[0]):np.clip(
+                    svet[1] + svet[3], 0, frame.shape[0]), np.clip(svet[0], 0, frame.shape[1]):np.clip(svet[0] + svet[2], 0, frame.shape[1])])
+            color = (0, 0, 0)
+            if svet_label == "red":
+                color = (0, 0, 255)
+            elif svet_label == "green":
+                color = (0, 255, 0)
+            elif svet_label == "yellow":
+                color = (0, 255, 255)
+            elif svet_label=="red_yellow":
+                color = (0, 150, 255)
+            elif svet_label == "green_blink":
+                color = (0, 255, 110)
+            cv2.putText(img_out, svet_label, (10, 10), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, color, 2)
+            if svet_label == "nothing" and len(self.svet_hist) > 0:
+                del self.svet_hist[-1]
+            print(self.svet_hist)
         # print(svet_label)
         # boxes, classIDs, confidences = self.detector_std.detect(
         #     frame, s=(self.model_res, self.model_res))
@@ -148,12 +154,13 @@ class OBJDetection:
         # self.frames_left +=1
 
         mm = "none"
-        self.hist += signs
-        if len(self.hist) > thresh:
-            self.hist = self.hist[thresh:]
-        self.filter_dict = dict().fromkeys(self.sings_filter, 0)
-        for i in self.hist:
-            self.filter_dict[i] += 1
-        if sum(map(lambda x: x[1], self.filter_dict.items())) > 0 and len(self.hist) > 4:
-            mm = max(self.filter_dict.items(), key=lambda x: x[1])[0]
+        if self.sign_enable ==True:
+            self.hist += signs
+            if len(self.hist) > thresh:
+                self.hist = self.hist[thresh:]
+            self.filter_dict = dict().fromkeys(self.sings_filter, 0)
+            for i in self.hist:
+                self.filter_dict[i] += 1
+            if sum(map(lambda x: x[1], self.filter_dict.items())) > 0 and len(self.hist) > 4:
+                mm = max(self.filter_dict.items(), key=lambda x: x[1])[0]
         return img_out, signs, mm, svet_label, person
