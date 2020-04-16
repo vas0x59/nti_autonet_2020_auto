@@ -663,6 +663,7 @@ class VisionPovorots:
             self.angle = self.angele(left=left, right=right)
             stop_line = self.detect_stop_line(frame=perspective)
             if stop_line:
+                self.angle = 87
                 print("STOP_LINE")
                 self.speed = 1450
                 self.stopeer_f()
