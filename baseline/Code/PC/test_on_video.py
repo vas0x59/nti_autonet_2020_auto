@@ -31,5 +31,5 @@ while (cv.waitKey(1) != 27):
 
 cv.destroyAllWindows()
 cap.release()
-if vision.client != None:
+if hasattr(vison, 'client'):
     vision.client.loop_stop(force=False)

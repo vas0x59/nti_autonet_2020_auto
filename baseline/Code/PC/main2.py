@@ -85,5 +85,5 @@ cv2.destroyAllWindows()
 client.stop()
 out.release()
 
-if vision.client != None:
+if hasattr(vison, 'client'):
     vision.client.loop_stop(force=False)
