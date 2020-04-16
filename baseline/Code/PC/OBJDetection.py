@@ -16,10 +16,10 @@ class OBJDetection:
         # self.model_w_path = "yolo_sign_model_v1/yolov3_signs_v1_12800.weights"
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
-        self.model_w_path = "yolo_sign_v2/yolov3_cfg_208000.weights" # signs200 all197 208 ok
+        self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
-        self.model_res = 416
+        self.model_res = 320
         self.sings_filter = ["pedestrian", "stop", "parking",
                              "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]
         self.filter_dict = dict().fromkeys(self.sings_filter, 0)
@@ -46,6 +46,7 @@ class OBJDetection:
 
     def predict_svet(self, inm):
         crop2 = inm.copy()
+        crop2 = cv2.resize(crop2, (20, 60))
         est = False
         svet = [0, 0, 0]
         h, w = crop2.shape[:2]
@@ -77,7 +78,7 @@ class OBJDetection:
         #     return "yellow"
         # print(svet)
         # return self.labels[svet.index(max(svet))]
-        label = "none"
+        label = "green_blink"
         svet[2]  = svet[2] *1.03
         # print(svet)
         if max(svet) > 0.38:
@@ -90,9 +91,9 @@ class OBJDetection:
             elif svet[0] > svet[2] and svet[0] > svet[1]:
                 label = "red"
         self.svet_hist += [label]
-        if len(self.svet_hist) > 18:
-            self.svet_hist = self.svet_hist[-18:]
-        if abs(self.svet_hist.count("green") -self.svet_hist.count("none")) < 2 and  abs((self.svet_hist.count("green") + self.svet_hist.count("none")) - len(self.svet_hist)) < 1:
+        if len(self.svet_hist) > 20:
+            self.svet_hist = self.svet_hist[-20:]
+        if abs(self.svet_hist.count("green") -self.svet_hist.count("green_blink")) < 6 and  abs((self.svet_hist[-5:].count("green") + self.svet_hist[-5:].count("green_blink")) - len(self.svet_hist[-5:])) < 2:
             label="green_blink"
         return label
 
