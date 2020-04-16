@@ -621,7 +621,7 @@ class VisionPovorots:
                         self.angle = 87 + 28
                     else:
                         self.resetPeret()
-                    print("Left = ", time.time() - self.timeLast, "angle = ", self.angle)
+                    print("Left = ", time.time() - self.timeLast, "angle = {} speed = {}".format(self.angle, self.speed))
             elif self.r == 1:
                 if self.timeLast == 0:  # По времени
                     self.timeLast = time.time()
