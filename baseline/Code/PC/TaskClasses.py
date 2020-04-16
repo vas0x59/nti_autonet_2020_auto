@@ -173,7 +173,7 @@ class VisionPersonStop:
         # exit()
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
+        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.2)
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
@@ -243,7 +243,7 @@ class VisionSignHist:
         # exit()
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.4)
+        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.3)
 
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)

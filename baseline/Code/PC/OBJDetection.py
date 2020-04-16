@@ -6,7 +6,9 @@ import cv2
 cv = cv2
 def get_area(p):
     return p[2]*p[3]
-
+def get_centre(p):
+    # print( p[1] + (p[3] // 2))
+    return (p[0] + (p[2] // 2), p[1] + (p[3] // 2))
 
 class OBJDetection:
     def __init__(self):
@@ -17,7 +19,7 @@ class OBJDetection:
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
         # self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
-        self.model_w_path ="yolo_sign_v2/yolov3_cfg_393000.weights"
+        self.model_w_path ="yolo_sign_v2/yolov3_cfg_399000.weights"
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
         self.model_res = 320
@@ -102,7 +104,7 @@ class OBJDetection:
 
 
     def run(self, frame, thresh=6, conf=0.5):
-        frame = frame[:, frame.shape[1] // 6*2:]
+        frame = frame[:, frame.shape[1] // 6*0:]
         boxes, classIDs, confidences = self.detector.detect(
             frame, s=(self.model_res, self.model_res), conf=conf)
         img_out = Utils.draw_boxes(
@@ -111,7 +113,12 @@ class OBJDetection:
             signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i]) for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0]
                             * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter], key=lambda x: get_area(x[1]), reverse=True)
         # print(signs_o)
-        person = 10 in classIDs
+        persons = [confidences[i] for i in range(len(classIDs)) if classIDs[i] == 10 and get_centre(boxes[i])[1] > (frame.shape[0] // 6 * 2)]
+        # person = 10 in classIDs
+        # print(persons)
+        person = len(persons) > 0
+        cv2.putText(img_out, str(person), (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (255, 0, 150), 2)
         signs = []
         if self.sign_enable ==True:
             signs = [i[0] for i in signs_o]
