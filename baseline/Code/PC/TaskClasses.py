@@ -539,6 +539,7 @@ class VisionPovorots:
         self.kGo = 0
         self.timeLast = 0
         self.next = 0
+        self.speedPovorot = 1550
 
     def resetPeret(self):
         self.next = 0
@@ -607,6 +608,7 @@ class VisionPovorots:
                 else:
                     self.resetPeret()
             elif self.l == 1:
+                self.speed = self.speedPovorot
                 if self.timeLast == 0:
                     self.timeLast = time.time()
                 else:
