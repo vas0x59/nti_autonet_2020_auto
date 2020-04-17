@@ -4,8 +4,8 @@ import time
 import threading
 from functools import wraps
 timeout_detect_stop = 0
-KP = 0.32  # 0.22
-KD = 0.17
+KP = 0.31  # 0.22
+KD = 0.16
 last = 0
 SIZE = (400, 300)
 

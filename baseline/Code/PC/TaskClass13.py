@@ -17,6 +17,7 @@ class Vision:
         self.sign = "none"
         self.sign_hist = []
         self.objd.load()
+        self.timeLast = 0
         self.l = 0
         self.r = 0
         self.pov = 0
@@ -28,11 +29,12 @@ class Vision:
         self.objd.svet_enable = False
         self.objd.sign_enable = True
         self.signStop = 0
-        self.client = mqtt.Client()
-        self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        self.client.connect("192.168.1.208", 1883, 60)
-        self.loop_start()
+        self.angle = 87
+        # self.client = mqtt.Client()
+        # self.client.on_connect = self.on_connect
+        # self.client.on_message = self.on_message
+        # self.client.connect("192.168.1.208", 1883, 60)
+        # self.client.loop_start()
         time.sleep(1)
         
     def on_connect(self, client, userdata, flags, rc):
@@ -97,7 +99,7 @@ class Vision:
     def run(self, frame):
         # if self.objd.sign_enable:
         img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
-        cv2.imshov("img_out", img_out)
+        cv2.imshow("img_out", img_out)
         if person:
             self.speed = 1500
             self.stopeer_f()
