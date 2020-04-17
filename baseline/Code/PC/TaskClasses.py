@@ -245,7 +245,7 @@ class VisionPersonCounter:
         # exit()
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.2)
+        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)

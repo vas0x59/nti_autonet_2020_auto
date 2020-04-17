@@ -95,9 +95,9 @@ class Vision:
         self.need_svet = True
 
     def run(self, frame):
-        if self.objd.sign_enable:
-            img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
-            cv2.imshov("img_out", img_out)
+        # if self.objd.sign_enable:
+        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
+        cv2.imshov("img_out", img_out)
         if person:
             self.speed = 1500
             self.stopeer_f()
@@ -134,7 +134,7 @@ class Vision:
                 self.angle = self.angele(left=left, right=right)
         else:
             if self.go == 0:
-                img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
+                # img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.5)
                 if self.need_svet:
                     if svet_sign == "green":
                         self.go = 1
