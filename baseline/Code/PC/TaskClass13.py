@@ -50,10 +50,11 @@ class Vision:
         print(msg.topic + " " + str(data))
         # data = str(msg.payload)
         # var += list(var)
-        klocal = list(data.split())
-        klocal = map(str.lower, klocal)
-
-        self.kyda += list(klocal)
+        klocal = list(data.lower())
+        #klocal = map(str.lower, klocal)
+        
+        #self.kyda += list(klocal)
+        self.kyda += klocal
         self.nKyda = len(self.kyda)
 
     def resetPeret(self):
