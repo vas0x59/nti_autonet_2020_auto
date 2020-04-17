@@ -3,6 +3,7 @@ from OBJDetection import OBJDetection
 import paho.mqtt.client as mqtt
 import time
 
+
 class Vision:
     def __init__(self, d=0):
         self.d = d
@@ -36,7 +37,7 @@ class Vision:
         # self.client.connect("192.168.1.208", 1883, 60)
         # self.client.loop_start()
         time.sleep(1)
-        
+
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code " + str(rc))
 
@@ -130,7 +131,7 @@ class Vision:
                 self.pov = 1
                 if self.nKyda > 0:
                     self.l, self.r = (1, 0) if self.kyda[0] == 'l' else (0, 1) if self.kyda[0] == 'r' else (1, 1)
-                else: 
+                else:
                     self.speed = 1500
             else:
                 self.angle = self.angele(left=left, right=right)
@@ -155,21 +156,22 @@ class Vision:
                         self.angle = 88
                     else:
                         self.resetPeret()
-                    print("Forward = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
                 elif self.l == 1:  # Ехать на лево
                     self.speed = self.speedPovorot
-                    if time.time() - self.timeLast >= 0.9 and self.next == 0:
-                        self.next += 1
-                        self.timeLast = 0
-                    elif time.time() - self.timeLast >= 3.5 and self.next == 1:
-                        self.next += 1
-                    if self.next == 0:
-                        self.angle = 88
-                    elif self.next == 1:
-                        self.angle = 88 + 25
+                    if self.timeLast == 0:  # По времени
+                        self.timeLast = time.time()
                     else:
-                        self.resetPeret()
-                    print("Left = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
+                        if time.time() - self.timeLast >= 0.9 and self.next == 0:
+                            self.next += 1
+                            self.timeLast = 0
+                        elif time.time() - self.timeLast >= 3.5 and self.next == 1:
+                            self.next += 1
+                        if self.next == 0:
+                            self.angle = 88
+                        elif self.next == 1:
+                            self.angle = 88 + 25
+                        else:
+                            self.resetPeret()
                 elif self.r == 1:  # ехать на право
                     self.speed = speed
                     if self.timeLast == 0:  # По времени
@@ -185,6 +187,5 @@ class Vision:
                             self.angle = 87 - 30
                         else:
                             self.resetPeret()
-                        print("Right = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
 
         return self.angle, self.speed
