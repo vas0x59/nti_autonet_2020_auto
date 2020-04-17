@@ -1,7 +1,7 @@
 import cv2 as cv
 from func import *
 from TaskClasses import *
-cap = cv.VideoCapture("Videos/output2.mkv")
+cap = cv.VideoCapture("Videos/output_1587036410.avi")
 if cap.isOpened() == False:
     print("Cannot open input video")
     exit()
@@ -13,7 +13,7 @@ b = 0
 i = 0
 while (cv.waitKey(1) != 27):
     ret, frame = cap.read()
-    frame = np.array(frame*0.9, dtype="uint8")
+    frame = np.array(np.clip(frame, 0, 255), dtype="uint8")
     # frame_copy = frame.copy()
     # perspective = vision.vision_func(frame=frame_copy)
     # cv.imshow("perspective", perspective)

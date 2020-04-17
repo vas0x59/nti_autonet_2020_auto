@@ -20,7 +20,7 @@ class OBJDetection:
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
         # self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
-        self.model_w_path ="yolo_sign_v2/yolov3_cfg_410000.weights"
+        self.model_w_path ="yolo_sign_v2/yolov3_cfg_524000.weights"
         self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
         self.model_n_path = "yolo_sign_v2/classes.txt"
         self.model_res = 320
@@ -106,7 +106,7 @@ class OBJDetection:
         return label
 
 
-    def run(self, frame, thresh=6, conf=0.5):
+    def run(self, frame, thresh=12, conf=0.5):
         frame = frame[:, frame.shape[1] // 6*0:]
         boxes, classIDs, confidences = self.detector.detect(
             frame, s=(self.model_res, self.model_res), conf=conf)
@@ -114,9 +114,9 @@ class OBJDetection:
             frame, boxes, classIDs, confidences, self.detector.CLASSES, COLORS=self.detector.COLORS)
         if self.sign_enable ==True:
             signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i]) for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0]
-                            * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter], key=lambda x: get_area(x[1]), reverse=True)
+                            * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter and confidences[i] > 0.48], key=lambda x: get_area(x[1]), reverse=True)
         # print(signs_o)
-        persons = [confidences[i] for i in range(len(classIDs)) if classIDs[i] == 10 and get_centre(boxes[i])[1] > (frame.shape[0] // 6 * 2)]
+        persons = [confidences[i] for i in range(len(classIDs)) if classIDs[i] == 10 and get_centre(boxes[i])[1] > (frame.shape[0] // 6 * 0.5)]
         # person = 10 in classIDs
         # print(persons)
         person = len(persons) > 0
