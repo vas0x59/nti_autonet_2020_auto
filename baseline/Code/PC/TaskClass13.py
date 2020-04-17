@@ -140,8 +140,6 @@ class Vision:
                         self.go = 1
                         self.angle = 88
                         self.speed = speed
-                        self.objd.svet_enable = False
-                        self.objd.sign_enable = True
                     else:
                         self.go = 0
                         self.speed = stop_speed
