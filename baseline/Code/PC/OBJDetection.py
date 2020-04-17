@@ -114,7 +114,7 @@ class OBJDetection:
             frame, boxes, classIDs, confidences, self.detector.CLASSES, COLORS=self.detector.COLORS)
         if self.sign_enable ==True:
             signs_o = sorted([(self.detector.CLASSES[classIDs[i]], boxes[i]) for i in range(len(classIDs)) if get_area(boxes[i]) > frame.shape[0]
-                            * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter and confidences[i] > 0.48], key=lambda x: get_area(x[1]), reverse=True)
+                            * frame.shape[1] * 0.01 and self.detector.CLASSES[classIDs[i]] in self.sings_filter and confidences[i] > 0.52], key=lambda x: get_area(x[1]), reverse=True)
         # print(signs_o)
         persons = [confidences[i] for i in range(len(classIDs)) if classIDs[i] == 10 and get_centre(boxes[i])[1] > (frame.shape[0] // 6 * 0.5)]
         # person = 10 in classIDs
